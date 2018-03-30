@@ -16,58 +16,83 @@
 
 package com.robotmitya.robo_controller;
 
+import android.content.Intent;
 import android.os.Bundle;
-import org.ros.android.MessageCallable;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
-import org.ros.android.view.RosTextView;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-import org.ros.rosjava_tutorial_pubsub.Talker;
+//import org.ros.rosjava_tutorial_pubsub.Talker;
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
  */
 public class MainActivity extends RosActivity {
 
-  private RosTextView<std_msgs.String> rosTextView;
-  private Talker talker;
+    private ArduinoInputPublisher mArduinoInputPublisher;
 
-  public MainActivity() {
-    // The RosActivity constructor configures the notification title and ticker
-    // messages.
-    super("Pubsub Tutorial", "Pubsub Tutorial");
-  }
+    public MainActivity() {
+        super("RoboController", "RoboController");
+    }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
-    rosTextView = (RosTextView<std_msgs.String>) findViewById(R.id.text);
-    rosTextView.setTopicName("chatter");
-    rosTextView.setMessageType(std_msgs.String._TYPE);
-    rosTextView.setMessageToStringCallable(new MessageCallable<String, std_msgs.String>() {
-      @Override
-      public String call(std_msgs.String message) {
-        return message.getData();
-      }
-    });
-  }
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-  @Override
-  protected void init(NodeMainExecutor nodeMainExecutor) {
-    talker = new Talker();
+        Button buttonLed1 = (Button) findViewById(R.id.buttonLed1);
+        buttonLed1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mArduinoInputPublisher.switchLed1();
+                Log.d("++++", "LED 1 press");
+            }
+        });
 
-    // At this point, the user has already been prompted to either enter the URI
-    // of a master to use or to start a master locally.
+        Button buttonLed2 = (Button) findViewById(R.id.buttonLed2);
+        buttonLed2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mArduinoInputPublisher.switchLed2();
+                Log.d("++++", "LED 2 press");
+            }
+        });
+    }
 
-    // The user can easily use the selected ROS Hostname in the master chooser
-    // activity.
-    NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(getRosHostname());
-    nodeConfiguration.setMasterUri(getMasterUri());
-    nodeMainExecutor.execute(talker, nodeConfiguration);
+    @Override
+    protected void init(NodeMainExecutor nodeMainExecutor) {
+        mArduinoInputPublisher = new ArduinoInputPublisher();
+
+        // At this point, the user has already been prompted to either enter the URI
+        // of a master to use or to start a master locally.
+
+        // The user can easily use the selected ROS Hostname in the master chooser
+        // activity.
+        //NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(getRosHostname());
+        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
+                InetAddressFactory.newNonLoopback().getHostAddress());
+        nodeConfiguration.setMasterUri(getMasterUri());
+        nodeMainExecutor.execute(mArduinoInputPublisher, nodeConfiguration);
+
+/*
     // The RosTextView is also a NodeMain that must be executed in order to
     // start displaying incoming messages.
-    nodeMainExecutor.execute(rosTextView, nodeConfiguration);
-  }
+    nodeMainExecutor.execute(rosTextView, nodeConfiguration);*/
+
+    }
+
+    @Override
+    public void startMasterChooser() {
+        Intent data = new Intent();
+        //Log.d(this, "++++++++++++ ROS_MASTER_URI=" + SettingsFragment.getMasterUri());
+        data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
+        data.putExtra("NEW_MASTER", false);
+        data.putExtra("ROS_MASTER_PRIVATE", false);
+        onActivityResult(0, RESULT_OK, data);
+    }
 }

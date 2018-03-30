@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <org.ros.android.view.RosTextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/buttonLed1"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dip" />
+        android:layout_marginTop="20dp"
+        android:text="Switch LED 1"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_horizontal" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/buttonLed2"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Switch LED 2"
+        android:textAlignment="center"
+        android:padding="10dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_horizontal" />
 
 </LinearLayout>
