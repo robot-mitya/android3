@@ -1,12 +1,14 @@
 package com.robotmitya.robo_controller;
 
+import org.ros.message.Time;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.Node;
 import org.ros.node.NodeMain;
 import org.ros.node.topic.Publisher;
 
-import static com.robotmitya.robo_controller.Constants.TAG;
+import geometry_msgs.Quaternion;
+import std_msgs.Header;
 
 /**
  *
@@ -15,12 +17,11 @@ import static com.robotmitya.robo_controller.Constants.TAG;
 
 public class ControllerNode implements NodeMain {
 
-    private String mArduinoInputTopicName;
     private Publisher<std_msgs.String> mArduinoInputPublisher;
+    private Publisher<std_msgs.String> mHerkulexInputPublisher;
+    private Publisher<sensor_msgs.Imu> mControllerImuPublisher;
 
-    ControllerNode() {
-        mArduinoInputTopicName = Constants.TopicName.ArduinoInput;
-    }
+    private int mImuSeq = 0;
 
     @Override
     public GraphName getDefaultNodeName() {
@@ -29,7 +30,9 @@ public class ControllerNode implements NodeMain {
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
-        mArduinoInputPublisher = connectedNode.newPublisher(mArduinoInputTopicName, "std_msgs/String");
+        mArduinoInputPublisher = connectedNode.newPublisher(Constants.TopicName.ArduinoInput, "std_msgs/String");
+        mHerkulexInputPublisher = connectedNode.newPublisher(Constants.TopicName.HerkulexInput, "std_msgs/String");
+        mControllerImuPublisher = connectedNode.newPublisher(Constants.TopicName.ControllerImu, "sensor_msgs/Imu");
     }
 
     @Override
@@ -45,20 +48,35 @@ public class ControllerNode implements NodeMain {
     }
 
     void switchLed1() {
-        android.util.Log.d(TAG, "11");
-        std_msgs.String str = mArduinoInputPublisher.newMessage();
-        str.setData("L1 -1;");
-        android.util.Log.d(TAG, "12");
-        mArduinoInputPublisher.publish(str);
-        android.util.Log.d(TAG, "13");
+        std_msgs.String message = mArduinoInputPublisher.newMessage();
+        message.setData("L1 -1;");
+        mArduinoInputPublisher.publish(message);
     }
 
     void switchLed2() {
-        android.util.Log.d(TAG, "21");
-        std_msgs.String str = mArduinoInputPublisher.newMessage();
-        str.setData("L2 -1;");
-        android.util.Log.d(TAG, "22");
-        mArduinoInputPublisher.publish(str);
-        android.util.Log.d(TAG, "23");
+        std_msgs.String message = mArduinoInputPublisher.newMessage();
+        message.setData("L2 -1;");
+        mArduinoInputPublisher.publish(message);
+    }
+
+    void sendOrientation(long timestamp, float x, float y, float z, float w) {
+        sensor_msgs.Imu message = mControllerImuPublisher.newMessage();
+        Header header = message.getHeader();
+        header.setSeq(mImuSeq++);
+        header.setFrameId("c");
+        header.setStamp(Time.fromNano(timestamp));
+        Quaternion quaternion = message.getOrientation();
+        quaternion.setX(x);
+        quaternion.setY(y);
+        quaternion.setZ(z);
+        quaternion.setW(w);
+        mControllerImuPublisher.publish(message);
+    }
+
+    void setPointingMode(boolean enabled) {
+        String command = enabled ? "{n: pointing, v: 0x01}" : "{n: pointing, v: 0x00}";
+        std_msgs.String message = mArduinoInputPublisher.newMessage();
+        message.setData(command);
+        mHerkulexInputPublisher.publish(message);
     }
 }

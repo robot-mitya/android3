@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Switch LED 1"
+        android:text="@string/ui_switch_led_1"
         android:textAlignment="center"
         android:padding="10dp"
         android:background="@android:color/darker_gray"
@@ -22,10 +22,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Switch LED 2"
+        android:text="@string/ui_switch_led_2"
         android:textAlignment="center"
         android:padding="10dp"
         android:background="@android:color/darker_gray"
         android:gravity="center_horizontal" />
+
+    <CheckBox
+        android:id="@+id/checkboxSendOrientation"
+        android:checked="false"
+        android:layout_marginTop="20dp"
+        android:text="@string/ui_send_orientation"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

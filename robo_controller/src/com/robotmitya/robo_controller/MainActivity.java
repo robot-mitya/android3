@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import org.ros.address.Address;
 import org.ros.address.InetAddressFactory;
@@ -38,6 +40,8 @@ import static com.robotmitya.robo_controller.Constants.TAG;
 public class MainActivity extends RosActivity {
 
     private ControllerNode mControllerNode;
+    private Orientation mOrientation;
+    private boolean mSendingOrientation = false;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -50,6 +54,14 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
 
         mControllerNode = new ControllerNode();
+
+        mOrientation = new Orientation(this);
+        mOrientation.setOnOrientationListener(new Orientation.OnOrientationListener() {
+            public void onOrientation(long timestamp, float x, float y, float z, float w) {
+                if (mSendingOrientation)
+                    mControllerNode.sendOrientation(timestamp, x, y, z, w);
+            }
+        });
 
         Button buttonLed1 = (Button) findViewById(R.id.buttonLed1);
         buttonLed1.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +80,29 @@ public class MainActivity extends RosActivity {
                 Log.d(TAG, "LED 2 press");
             }
         });
+
+        CheckBox checkBoxSendOrientation = (CheckBox) findViewById(R.id.checkboxSendOrientation);
+        checkBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    mOrientation.zero();
+                mControllerNode.setPointingMode(isChecked);
+                mSendingOrientation = isChecked;
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mOrientation.start();
+    }
+
+    @Override
+    protected void onStop() {
+        mOrientation.stop();
+        super.onStop();
     }
 
     @Override
@@ -81,12 +116,6 @@ public class MainActivity extends RosActivity {
         nodeConfiguration.setMasterUri(getMasterUri());
 
         nodeMainExecutor.execute(mControllerNode, nodeConfiguration);
-
-/*
-    // The RosTextView is also a NodeMain that must be executed in order to
-    // start displaying incoming messages.
-    nodeMainExecutor.execute(rosTextView, nodeConfiguration);*/
-
     }
 
     @Override

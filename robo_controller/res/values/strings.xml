@@ -3,4 +3,8 @@
 
     <string name="app_name">RoboController</string>
 
+    <string name="ui_switch_led_1">Switch LED 1</string>
+    <string name="ui_switch_led_2">Switch LED 2</string>
+    <string name="ui_send_orientation">Send orientation</string>
+
 </resources>
