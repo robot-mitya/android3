@@ -21,7 +21,7 @@ public class Orientation implements SensorEventListener {
     private OnOrientationListener mOnOrientationListener;
 
     private Quaternionf mQuaternionSensor = new Quaternionf();
-    private Quaternionf mQuaternionZero = new Quaternionf();
+    private Quaternionf mQuaternionCenter = new Quaternionf();
     private Quaternionf mQuaternion = new Quaternionf();
 
     private Vector3f mTestWorldX = new Vector3f(1, 0, 0);
@@ -50,8 +50,8 @@ public class Orientation implements SensorEventListener {
         mSensorManager.unregisterListener(this);
     }
 
-    void zero() {
-        mQuaternionSensor.conjugate(mQuaternionZero);
+    void center() {
+        mQuaternionSensor.conjugate(mQuaternionCenter);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Orientation implements SensorEventListener {
         else
             mQuaternionSensor.set(event.values[0], event.values[1], event.values[2]);
         mQuaternion.set(mQuaternionSensor);
-        mQuaternion.mul(mQuaternionZero);
+        mQuaternion.mul(mQuaternionCenter);
 
         mX.set(mTestWorldX);
         mY.set(mTestWorldY);

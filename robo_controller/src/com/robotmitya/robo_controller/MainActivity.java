@@ -24,13 +24,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import org.ros.address.Address;
-import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-
-import java.net.InetAddress;
 
 import static com.robotmitya.robo_controller.Constants.TAG;
 
@@ -85,8 +81,10 @@ public class MainActivity extends RosActivity {
         checkBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    mOrientation.zero();
+                if (isChecked) {
+                    mOrientation.center();
+                    mControllerNode.centerHeadImu();
+                }
                 mControllerNode.setPointingMode(isChecked);
                 mSendingOrientation = isChecked;
             }
