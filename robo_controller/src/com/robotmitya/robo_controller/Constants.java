@@ -6,6 +6,8 @@ package com.robotmitya.robo_controller;
  */
 
 class Constants {
+    static final String TAG = "RobotMitya";
+
     class NodeName {
         static final String Controller = "robot_mitya/controller";
     }

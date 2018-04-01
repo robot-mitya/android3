@@ -22,18 +22,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.ros.address.Address;
 import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-//import org.ros.rosjava_tutorial_pubsub.Talker;
+
+import java.net.InetAddress;
+
+import static com.robotmitya.robo_controller.Constants.TAG;
 
 /**
- * @author damonkohler@google.com (Damon Kohler)
+ * @author DmitryDzz
  */
 public class MainActivity extends RosActivity {
 
-    private ArduinoInputPublisher mArduinoInputPublisher;
+    private ControllerNode mControllerNode;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -45,12 +49,14 @@ public class MainActivity extends RosActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        mControllerNode = new ControllerNode();
+
         Button buttonLed1 = (Button) findViewById(R.id.buttonLed1);
         buttonLed1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mArduinoInputPublisher.switchLed1();
-                Log.d("++++", "LED 1 press");
+                mControllerNode.switchLed1();
+                Log.d(TAG, "LED 1 press");
             }
         });
 
@@ -58,26 +64,23 @@ public class MainActivity extends RosActivity {
         buttonLed2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mArduinoInputPublisher.switchLed2();
-                Log.d("++++", "LED 2 press");
+                mControllerNode.switchLed2();
+                Log.d(TAG, "LED 2 press");
             }
         });
     }
 
     @Override
     protected void init(NodeMainExecutor nodeMainExecutor) {
-        mArduinoInputPublisher = new ArduinoInputPublisher();
-
-        // At this point, the user has already been prompted to either enter the URI
-        // of a master to use or to start a master locally.
-
-        // The user can easily use the selected ROS Hostname in the master chooser
-        // activity.
-        //NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(getRosHostname());
-        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
-                InetAddressFactory.newNonLoopback().getHostAddress());
+// getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
+//        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
+//                InetAddressFactory.newNonLoopback().getHostAddress());
+        String ipAddress = RoboHelper.wifiIpAddress(this);
+        Log.i(TAG, "IP address: " + ipAddress);
+        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
-        nodeMainExecutor.execute(mArduinoInputPublisher, nodeConfiguration);
+
+        nodeMainExecutor.execute(mControllerNode, nodeConfiguration);
 
 /*
     // The RosTextView is also a NodeMain that must be executed in order to

@@ -16,20 +16,19 @@
 
 dependencies {
   compile 'org.ros.rosjava_core:rosjava_tutorial_pubsub:[0.3,0.4)'
-  compile project(':android_15')
+  compile project(':android_10')
 }
 
 apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 25
+
   defaultConfig {
-    minSdkVersion 21
-    applicationId "com.robotmitya.robo_controller"
-    targetSdkVersion 21
+    minSdkVersion 10
+    applicationId "org.ros.android.android_tutorial_pubsub"
+    targetSdkVersion 10
     versionCode 1
     versionName "1.0"
-  }
-  productFlavors {
   }
 }
