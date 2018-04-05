@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
@@ -39,6 +40,10 @@ public class MainActivity extends RosActivity {
     private Orientation mOrientation;
     private boolean mSendingOrientation = false;
 
+    private CheckBox mCheckBoxSendOrientation;
+    private TextView mTextOutput1;
+    private TextView mTextOutput2;
+
     public MainActivity() {
         super("RoboController", "RoboController");
     }
@@ -48,6 +53,9 @@ public class MainActivity extends RosActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        mTextOutput1 = (TextView) findViewById(R.id.textOutput1);
+        mTextOutput2 = (TextView) findViewById(R.id.textOutput2);
 
         mControllerNode = new ControllerNode();
 
@@ -77,18 +85,42 @@ public class MainActivity extends RosActivity {
             }
         });
 
-        CheckBox checkBoxSendOrientation = (CheckBox) findViewById(R.id.checkboxSendOrientation);
-        checkBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckBoxSendOrientation = (CheckBox) findViewById(R.id.checkboxSendOrientation);
+        mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mOrientation.center();
+                    mTextOutput2.setText(mOrientation.getMatrixAfterCenter());
                     mControllerNode.centerHeadImu();
                 }
                 mControllerNode.setPointingMode(isChecked);
                 mSendingOrientation = isChecked;
             }
         });
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(20);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String text1 = mCheckBoxSendOrientation.isChecked() ?
+                                        mOrientation.getFrameSensorText() : "";
+                                String text2 = mCheckBoxSendOrientation.isChecked() ?
+                                        mOrientation.getFrameResultText() : "";
+                                mTextOutput1.setText(text1);
+                                mTextOutput2.setText(text2);
+                            }
+                        });
+                    }
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }.start();
     }
 
     @Override
