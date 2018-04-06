@@ -170,12 +170,16 @@ public class Orientation implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        // Phone's axis direction: x - right, y - forward, z - up.
+        // Mitya's axis direction: x - forward, y - left, z - up.
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
         {
-            acc_.set(event.values[0], event.values[1], event.values[2]);
+            // "Strange" params sequence equals to +90° rotation around z axis.
+            acc_.set(event.values[1], -event.values[0], event.values[2]);
             return;
         } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            gyro_.set(event.values[0], event.values[1], event.values[2]);
+            // "Strange" params sequence equals to +90° rotation around z axis.
+            gyro_.set(event.values[1], -event.values[0], event.values[2]);
         } else {
             return;
         }
@@ -191,9 +195,6 @@ public class Orientation implements SensorEventListener {
 
         float[] madgwickQuaternion = madgwick_.getQuaternion();
         mQuaternionSensor.set(madgwickQuaternion[1], madgwickQuaternion[2], madgwickQuaternion[3], madgwickQuaternion[0]);
-//        mQuaternionSensor.set(madgwickQuaternion[0], madgwickQuaternion[1], madgwickQuaternion[2], madgwickQuaternion[3]);
-
-//Log.d(TAG, getQuaternionSensorText());
 
         mQuaternion.set(mQuaternionCenter);
         mQuaternion.mul(mQuaternionSensor);
