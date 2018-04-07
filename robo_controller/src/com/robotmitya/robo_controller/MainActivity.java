@@ -91,13 +91,13 @@ public class MainActivity extends RosActivity {
         mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mControllerNode.setPointingMode(isChecked);
+                mSendingOrientation = isChecked;
                 if (isChecked) {
                     mOrientation.center();
                     mTextOutput2.setText(mOrientation.getMatrixAfterCenter());
-                    mControllerNode.centerHeadImu();
+                    mControllerNode.centerHead();
                 }
-                mControllerNode.setPointingMode(isChecked);
-                mSendingOrientation = isChecked;
             }
         });
 
