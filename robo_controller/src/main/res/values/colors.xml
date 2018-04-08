@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="velocity_joystick_background">#FFC107</color>
+    <color name="velocity_joystick_zero_line">#FF5722</color>
+    <color name="velocity_joystick_current_line">#8BC34A</color>
+</resources>

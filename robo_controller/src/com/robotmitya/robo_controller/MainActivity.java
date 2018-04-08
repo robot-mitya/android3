@@ -42,8 +42,7 @@ public class MainActivity extends RosActivity {
     private boolean mSendingOrientation = false;
 
     private CheckBox mCheckBoxSendOrientation;
-    private TextView mTextOutput1;
-    private TextView mTextOutput2;
+    private TextView mTextOutput;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -56,8 +55,7 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mTextOutput1 = (TextView) findViewById(R.id.textOutput1);
-        mTextOutput2 = (TextView) findViewById(R.id.textOutput2);
+        mTextOutput = (TextView) findViewById(R.id.textOutput);
 
         mControllerNode = new ControllerNode();
 
@@ -95,7 +93,6 @@ public class MainActivity extends RosActivity {
                 mSendingOrientation = isChecked;
                 if (isChecked) {
                     mOrientation.center();
-                    mTextOutput2.setText(mOrientation.getMatrixAfterCenter());
                     mControllerNode.centerHead();
                 }
             }
@@ -112,10 +109,7 @@ public class MainActivity extends RosActivity {
                             public void run() {
                                 String text1 = mCheckBoxSendOrientation.isChecked() ?
                                         mOrientation.getFrameSensorText() : "";
-                                String text2 = mCheckBoxSendOrientation.isChecked() ?
-                                        mOrientation.getFrameResultText() : "";
-                                mTextOutput1.setText(text1);
-                                mTextOutput2.setText(text2);
+                                mTextOutput.setText(text1);
                             }
                         });
                     }
