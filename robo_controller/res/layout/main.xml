@@ -53,7 +53,7 @@
 
     <com.robotmitya.robo_controller.VelocityJoystick
         android:id="@+id/velocityJoystick"
-        android:background="@color/velocity_joystick_background"
+        android:background="@color/velocity_joystick_enabled_background"
         android:layout_weight="1"
         android:layout_height="0dp"
         android:layout_width="match_parent" />

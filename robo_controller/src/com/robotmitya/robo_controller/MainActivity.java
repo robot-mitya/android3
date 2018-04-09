@@ -42,6 +42,7 @@ public class MainActivity extends RosActivity {
     private boolean mSendingOrientation = false;
 
     private CheckBox mCheckBoxSendOrientation;
+    private VelocityJoystick mVelocityJoystick;
     private TextView mTextOutput;
 
     public MainActivity() {
@@ -91,10 +92,20 @@ public class MainActivity extends RosActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mControllerNode.setPointingMode(isChecked);
                 mSendingOrientation = isChecked;
+                mVelocityJoystick.setEnabled(isChecked);
                 if (isChecked) {
                     mOrientation.center();
                     mControllerNode.centerHead();
                 }
+            }
+        });
+
+        mVelocityJoystick = (VelocityJoystick) findViewById(R.id.velocityJoystick);
+        mVelocityJoystick.setEnabled(false);
+        mVelocityJoystick.setOnChangeVelocityListener(new VelocityJoystick.OnChangeVelocityListener() {
+            @Override
+            public void onChangeVelocity(int velocity) {
+                Log.d(TAG, "Velocity = " + velocity);
             }
         });
 

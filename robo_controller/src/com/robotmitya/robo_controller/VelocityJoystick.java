@@ -30,6 +30,8 @@ public class VelocityJoystick extends View {
     private Paint mPaintZeroLine;
     private Paint mPaintCurrentLine;
 
+    private OnChangeVelocityListener mOnChangeVelocityListener;
+
     public VelocityJoystick(Context context) {
         super(context);
         init();
@@ -51,10 +53,16 @@ public class VelocityJoystick extends View {
         init();
     }
 
+    public void setOnChangeVelocityListener(OnChangeVelocityListener onChangeVelocityListener) {
+        mOnChangeVelocityListener = onChangeVelocityListener;
+    }
+
     private void init() {
         mPaintZeroLine = new Paint();
-        mPaintZeroLine.setColor(getResources().getColor(R.color.velocity_joystick_zero_line));
-        mPaintZeroLine.setStrokeWidth(10); //todo Get value from resources.
+        mPaintZeroLine.setColor(
+                getResources().getColor(R.color.velocity_joystick_zero_line));
+        mPaintZeroLine.setStrokeWidth(
+                getResources().getDimension(R.dimen.velocity_joystick_line_width));
 
         mPaintCurrentLine = new Paint(mPaintZeroLine);
         mPaintCurrentLine.setColor(getResources().getColor(R.color.velocity_joystick_current_line));
@@ -68,19 +76,30 @@ public class VelocityJoystick extends View {
         Log.d(TAG, String.format(Locale.ENGLISH, "mWidth=%d mHeight=%d", mWidth, mHeight));
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        int colorId = enabled ?
+                R.color.velocity_joystick_enabled_background :
+                R.color.velocity_joystick_disabled_background;
+        setBackgroundColor(getResources().getColor(colorId));
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int)event.getX();
+        if (!isEnabled())
+            return false;
+
         int y = (int)event.getY();
-        String text = "";
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mIsTouched = true;
                 mOnTouchDownY = y;
                 mOnMoveCurrentY = y;
+                if (mOnChangeVelocityListener != null)
+                    mOnChangeVelocityListener.onChangeVelocity(0);
                 invalidate();
-                text += "Down";
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (y < 0)
@@ -89,17 +108,18 @@ public class VelocityJoystick extends View {
                     mOnMoveCurrentY = mHeight - 1;
                 else
                     mOnMoveCurrentY = y;
+                if (mOnChangeVelocityListener != null)
+                    mOnChangeVelocityListener.onChangeVelocity(
+                            getVelocity(mHeight, mOnTouchDownY, mOnMoveCurrentY));
                 invalidate();
-                text += "Move";
                 break;
             case MotionEvent.ACTION_UP:
                 mIsTouched = false;
+                if (mOnChangeVelocityListener != null)
+                    mOnChangeVelocityListener.onChangeVelocity(0);
                 invalidate();
-                text += "Up";
                 break;
         }
-        text += String.format(Locale.ENGLISH, " (%d, %d)", x, y);
-//        Log.d(TAG, text);
         return true;
     }
 
@@ -111,5 +131,26 @@ public class VelocityJoystick extends View {
             canvas.drawLine(10, mOnTouchDownY, mWidth-10, mOnTouchDownY, mPaintZeroLine);
             canvas.drawLine(10, mOnMoveCurrentY, mWidth-10, mOnMoveCurrentY, mPaintCurrentLine);
         }
+    }
+
+    private static int getVelocity(int height, int zeroY, int currentY) {
+        //Log.d(TAG, String.format("height=%d, zeroY=%d, currentY=%d", height, zeroY, currentY));
+        if (currentY < 0)
+            return 0;
+        if (currentY >= height)
+            return 100;
+        if (zeroY > height / 2) {
+            if (zeroY == 0)
+                return -100 * currentY / height;
+            return 100 * (zeroY - currentY) / zeroY;
+        } else {
+            if (height - zeroY == 1)
+                return 100 * (zeroY - currentY) / (height - 1);
+            return 100 * (zeroY - currentY) / (height - zeroY - 1);
+        }
+    }
+
+    public interface OnChangeVelocityListener {
+        void onChangeVelocity(int velocity);
     }
 }
