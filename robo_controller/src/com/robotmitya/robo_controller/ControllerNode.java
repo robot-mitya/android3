@@ -20,6 +20,7 @@ public class ControllerNode implements NodeMain {
     private Publisher<std_msgs.String> mArduinoInputPublisher;
     private Publisher<std_msgs.String> mHerkulexInputPublisher;
     private Publisher<sensor_msgs.Imu> mControllerImuPublisher;
+    private Publisher<std_msgs.Int8> mDriveTowardsPublisher;
 
     private int mImuSeq = 0;
 
@@ -33,6 +34,7 @@ public class ControllerNode implements NodeMain {
         mArduinoInputPublisher = connectedNode.newPublisher(Constants.TopicName.ArduinoInput, "std_msgs/String");
         mHerkulexInputPublisher = connectedNode.newPublisher(Constants.TopicName.HerkulexInput, "std_msgs/String");
         mControllerImuPublisher = connectedNode.newPublisher(Constants.TopicName.ControllerImu, "sensor_msgs/Imu");
+        mDriveTowardsPublisher = connectedNode.newPublisher(Constants.TopicName.DriveTowards, "std_msgs/Int8");
     }
 
     @Override
@@ -71,6 +73,12 @@ public class ControllerNode implements NodeMain {
         quaternion.setZ(z);
         quaternion.setW(w);
         mControllerImuPublisher.publish(message);
+    }
+
+    void sendDriveTowards(byte velocity) {
+        std_msgs.Int8 message = mDriveTowardsPublisher.newMessage();
+        message.setData(velocity);
+        mDriveTowardsPublisher.publish(message);
     }
 
     void setPointingMode(boolean enabled) {

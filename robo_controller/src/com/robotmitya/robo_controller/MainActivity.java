@@ -104,8 +104,9 @@ public class MainActivity extends RosActivity {
         mVelocityJoystick.setEnabled(false);
         mVelocityJoystick.setOnChangeVelocityListener(new VelocityJoystick.OnChangeVelocityListener() {
             @Override
-            public void onChangeVelocity(int velocity) {
+            public void onChangeVelocity(byte velocity) {
                 Log.d(TAG, "Velocity = " + velocity);
+                mControllerNode.sendDriveTowards(velocity);
             }
         });
 

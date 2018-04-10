@@ -15,7 +15,7 @@ class Constants {
     class TopicName {
         static final String ArduinoInput = "robot_mitya/arduino_input";
         static final String HerkulexInput = "robot_mitya/herkulex_input";
-        static final String HeadImuInput = "head_imu_input";
+        static final String DriveTowards = "robot_mitya/drive_towards";
         static final String ControllerImu = "robot_mitya/controller_imu";
     }
 }

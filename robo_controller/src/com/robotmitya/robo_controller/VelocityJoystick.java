@@ -26,6 +26,8 @@ public class VelocityJoystick extends View {
     private Paint mPaintZeroDisabledLine;
     private Paint mPaintCurrentLine;
 
+    private byte mPreviousVelocity = 0;
+
     private OnChangeVelocityListener mOnChangeVelocityListener;
 
     public VelocityJoystick(Context context) {
@@ -97,8 +99,7 @@ public class VelocityJoystick extends View {
             case MotionEvent.ACTION_DOWN:
                 mIsTouched = true;
                 mCurrentY = y;
-                if (mOnChangeVelocityListener != null)
-                    mOnChangeVelocityListener.onChangeVelocity(0);
+                processVelocity((byte) 0);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -108,16 +109,13 @@ public class VelocityJoystick extends View {
                     mCurrentY = mHeight - 1;
                 else
                     mCurrentY = y;
-                if (mOnChangeVelocityListener != null)
-                    mOnChangeVelocityListener.onChangeVelocity(
-                            getVelocity(mHeight, mZeroY, mCurrentY));
+                processVelocity((byte) getVelocity(mHeight, mZeroY, mCurrentY));
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 mIsTouched = false;
                 mCurrentY = 0;
-                if (mOnChangeVelocityListener != null)
-                    mOnChangeVelocityListener.onChangeVelocity(0);
+                processVelocity((byte) 0);
                 invalidate();
                 break;
         }
@@ -148,7 +146,14 @@ public class VelocityJoystick extends View {
         }
     }
 
+    private void processVelocity(byte velocity) {
+        if (velocity == mPreviousVelocity) return;
+        if (mOnChangeVelocityListener != null)
+            mOnChangeVelocityListener.onChangeVelocity(velocity);
+        mPreviousVelocity = velocity;
+    }
+
     public interface OnChangeVelocityListener {
-        void onChangeVelocity(int velocity);
+        void onChangeVelocity(byte velocity);
     }
 }
