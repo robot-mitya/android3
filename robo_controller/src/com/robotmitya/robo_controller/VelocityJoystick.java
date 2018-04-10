@@ -6,13 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import java.util.Locale;
-
-import static com.robotmitya.robo_controller.Constants.TAG;
 
 /**
  *
@@ -22,12 +17,13 @@ import static com.robotmitya.robo_controller.Constants.TAG;
 public class VelocityJoystick extends View {
     private int mWidth = 0;
     private int mHeight = 0;
+    private int mZeroY = 0;
 
     private boolean mIsTouched = false;
-    private int mOnTouchDownY = 0;
-    private int mOnMoveCurrentY = 0;
+    private int mCurrentY = 0;
 
-    private Paint mPaintZeroLine;
+    private Paint mPaintZeroEnabledLine;
+    private Paint mPaintZeroDisabledLine;
     private Paint mPaintCurrentLine;
 
     private OnChangeVelocityListener mOnChangeVelocityListener;
@@ -58,22 +54,27 @@ public class VelocityJoystick extends View {
     }
 
     private void init() {
-        mPaintZeroLine = new Paint();
-        mPaintZeroLine.setColor(
-                getResources().getColor(R.color.velocity_joystick_zero_line));
-        mPaintZeroLine.setStrokeWidth(
+        mPaintZeroEnabledLine = new Paint();
+        mPaintZeroEnabledLine.setColor(
+                getResources().getColor(R.color.velocity_joystick_zero_enabled_line));
+        mPaintZeroEnabledLine.setStrokeWidth(
                 getResources().getDimension(R.dimen.velocity_joystick_line_width));
 
-        mPaintCurrentLine = new Paint(mPaintZeroLine);
+        mPaintZeroDisabledLine = new Paint(mPaintZeroEnabledLine);
+        mPaintZeroDisabledLine.setColor(getResources().getColor(R.color.velocity_joystick_zero_disabled_line));
+
+        mPaintCurrentLine = new Paint(mPaintZeroEnabledLine);
         mPaintCurrentLine.setColor(getResources().getColor(R.color.velocity_joystick_current_line));
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onSizeChanged(int w, int h, int previousW, int previousH) {
+        super.onSizeChanged(w, h, previousW, previousH);
         mWidth = w;
         mHeight = h;
-        Log.d(TAG, String.format(Locale.ENGLISH, "mWidth=%d mHeight=%d", mWidth, mHeight));
+        mZeroY = h / 2;
+//        Log.d(TAG, String.format(Locale.ENGLISH,
+//                "mWidth=%d mHeight=%d mZeroY=%d", mWidth, mHeight, mZeroY));
     }
 
     @Override
@@ -95,26 +96,26 @@ public class VelocityJoystick extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mIsTouched = true;
-                mOnTouchDownY = y;
-                mOnMoveCurrentY = y;
+                mCurrentY = y;
                 if (mOnChangeVelocityListener != null)
                     mOnChangeVelocityListener.onChangeVelocity(0);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (y < 0)
-                    mOnMoveCurrentY = 0;
+                    mCurrentY = 0;
                 else if (y >= mHeight)
-                    mOnMoveCurrentY = mHeight - 1;
+                    mCurrentY = mHeight - 1;
                 else
-                    mOnMoveCurrentY = y;
+                    mCurrentY = y;
                 if (mOnChangeVelocityListener != null)
                     mOnChangeVelocityListener.onChangeVelocity(
-                            getVelocity(mHeight, mOnTouchDownY, mOnMoveCurrentY));
+                            getVelocity(mHeight, mZeroY, mCurrentY));
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 mIsTouched = false;
+                mCurrentY = 0;
                 if (mOnChangeVelocityListener != null)
                     mOnChangeVelocityListener.onChangeVelocity(0);
                 invalidate();
@@ -127,25 +128,22 @@ public class VelocityJoystick extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (mIsTouched) {
-            canvas.drawLine(10, mOnTouchDownY, mWidth-10, mOnTouchDownY, mPaintZeroLine);
-            canvas.drawLine(10, mOnMoveCurrentY, mWidth-10, mOnMoveCurrentY, mPaintCurrentLine);
-        }
+        boolean enabled = isEnabled();
+        canvas.drawLine(10, mZeroY, mWidth-10, mZeroY,
+                enabled ? mPaintZeroEnabledLine : mPaintZeroDisabledLine);
+        if (enabled && mIsTouched)
+            canvas.drawLine(10, mCurrentY, mWidth-10, mCurrentY, mPaintCurrentLine);
     }
 
     private static int getVelocity(int height, int zeroY, int currentY) {
         //Log.d(TAG, String.format("height=%d, zeroY=%d, currentY=%d", height, zeroY, currentY));
-        if (currentY < 0)
-            return 0;
-        if (currentY >= height)
-            return 100;
-        if (zeroY > height / 2) {
+        if (currentY < zeroY) {
             if (zeroY == 0)
-                return -100 * currentY / height;
+                return 0;
             return 100 * (zeroY - currentY) / zeroY;
         } else {
-            if (height - zeroY == 1)
-                return 100 * (zeroY - currentY) / (height - 1);
+            if (height - zeroY - 1 == 0)
+                return 0;
             return 100 * (zeroY - currentY) / (height - zeroY - 1);
         }
     }

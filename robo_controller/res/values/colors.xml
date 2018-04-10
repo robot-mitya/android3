@@ -2,6 +2,7 @@
 <resources>
     <color name="velocity_joystick_disabled_background">#BEBEBE</color>
     <color name="velocity_joystick_enabled_background">#FFC107</color>
-    <color name="velocity_joystick_zero_line">#FF5722</color>
+    <color name="velocity_joystick_zero_enabled_line">#FF5722</color>
+    <color name="velocity_joystick_zero_disabled_line">#757575</color>
     <color name="velocity_joystick_current_line">#8BC34A</color>
 </resources>
