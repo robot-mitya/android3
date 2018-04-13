@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ledButtons"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonLed1"
+            style="?buttonBarButtonStyle"
+            android:layout_gravity="start|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/ui_switch_led_1"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonLed2"
+            style="?buttonBarButtonStyle"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/ui_switch_led_2"
+            android:textAlignment="center"
+            android:padding="10dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/checkboxSendOrientation"
+        android:checked="false"
+        android:layout_marginTop="10dp"
+        android:text="@string/ui_send_orientation"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.robotmitya.robo_face.VelocityJoystick
+        android:id="@+id/velocityJoystick"
+        android:background="@color/velocity_joystick_enabled_background"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:id="@+id/textOutput"
+        android:background="@android:color/darker_gray"
+        android:foreground="@android:color/white"
+        android:fontFamily="monospace"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+</LinearLayout>
