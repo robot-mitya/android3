@@ -25,6 +25,7 @@ dependencies {
   compile "org.joml:joml-android:${jomlVersion}"
   compile 'org.ros.rosjava_core:rosjava_tutorial_pubsub:[0.3,0.4)'
   compile project(':android_15')
+  compile project(':robo_common')
 }
 
 apply plugin: 'com.android.application'

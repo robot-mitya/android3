@@ -23,11 +23,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.robotmitya.robo_common.RoboHelper;
+
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
-import static com.robotmitya.robo_face.Constants.TAG;
+import static com.robotmitya.robo_common.Constants.TAG;
 
 /**
  * @author DmitryDzz

@@ -26,11 +26,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.robotmitya.robo_common.RoboHelper;
+
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
 
-import static com.robotmitya.robo_controller.Constants.TAG;
+import static com.robotmitya.robo_common.Constants.TAG;
 
 /**
  * @author DmitryDzz

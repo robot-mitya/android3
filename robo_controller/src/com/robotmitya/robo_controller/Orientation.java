@@ -12,8 +12,6 @@ import org.joml.Vector3f;
 
 import java.util.Locale;
 
-import static com.robotmitya.robo_controller.Constants.TAG;
-
 /**
  *
  * Created by dmitrydzz on 01.04.18.
