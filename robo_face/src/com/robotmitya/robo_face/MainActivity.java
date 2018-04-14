@@ -17,6 +17,7 @@
 package com.robotmitya.robo_face;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,8 +38,8 @@ import static com.robotmitya.robo_common.Constants.TAG;
 public class MainActivity extends RosActivity {
 
     private FaceNode mFaceNode;
-
     private ImageView mFaceImage;
+    private FaceHelper mFaceHelper;
 
     public MainActivity() {
         super("RoboFace", "RoboFace");
@@ -51,8 +52,8 @@ public class MainActivity extends RosActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mFaceNode = new FaceNode();
-
         mFaceImage = (ImageView) findViewById(R.id.faceImage);
+        mFaceHelper = new FaceHelper(this, mFaceImage);
     }
 
     @Override
