@@ -21,10 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
@@ -37,109 +34,32 @@ import static com.robotmitya.robo_face.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
-    private ControllerNode mControllerNode;
-    private Orientation mOrientation;
-    private boolean mSendingOrientation = false;
+    private FaceNode mFaceNode;
 
-    private CheckBox mCheckBoxSendOrientation;
-    private VelocityJoystick mVelocityJoystick;
-    private TextView mTextOutput;
+    private ImageView mFaceImage;
 
     public MainActivity() {
         super("RoboFace", "RoboFace");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mTextOutput = (TextView) findViewById(R.id.textOutput);
+        mFaceNode = new FaceNode();
 
-        mControllerNode = new ControllerNode();
-
-        mOrientation = new Orientation(this);
-        mOrientation.setOnOrientationListener(new Orientation.OnOrientationListener() {
-            public void onOrientation(long timestamp, float x, float y, float z, float w) {
-                if (mSendingOrientation)
-                    mControllerNode.sendOrientation(timestamp, x, y, z, w);
-            }
-        });
-
-        Button buttonLed1 = (Button) findViewById(R.id.buttonLed1);
-        buttonLed1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed1();
-                Log.d(TAG, "LED 1 press");
-            }
-        });
-
-        Button buttonLed2 = (Button) findViewById(R.id.buttonLed2);
-        buttonLed2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed2();
-                Log.d(TAG, "LED 2 press");
-            }
-        });
-
-        mCheckBoxSendOrientation = (CheckBox) findViewById(R.id.checkboxSendOrientation);
-        mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mControllerNode.setPointingMode(isChecked);
-                mSendingOrientation = isChecked;
-                mVelocityJoystick.setEnabled(isChecked);
-                if (isChecked) {
-                    mOrientation.center();
-                    mControllerNode.centerHead();
-                }
-            }
-        });
-
-        mVelocityJoystick = (VelocityJoystick) findViewById(R.id.velocityJoystick);
-        mVelocityJoystick.setEnabled(false);
-        mVelocityJoystick.setOnChangeVelocityListener(new VelocityJoystick.OnChangeVelocityListener() {
-            @Override
-            public void onChangeVelocity(byte velocity) {
-                Log.d(TAG, "Velocity = " + velocity);
-                mControllerNode.sendDriveTowards(velocity);
-            }
-        });
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(20);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String text1 = mCheckBoxSendOrientation.isChecked() ?
-                                        mOrientation.getFrameSensorText() : "";
-                                mTextOutput.setText(text1);
-                            }
-                        });
-                    }
-                } catch (InterruptedException ignored) {
-                }
-            }
-        }.start();
+        mFaceImage = (ImageView) findViewById(R.id.faceImage);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mOrientation.start();
     }
 
     @Override
     protected void onStop() {
-        mOrientation.stop();
         super.onStop();
     }
 
@@ -153,16 +73,29 @@ public class MainActivity extends RosActivity {
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
 
-        nodeMainExecutor.execute(mControllerNode, nodeConfiguration);
+        nodeMainExecutor.execute(mFaceNode, nodeConfiguration);
     }
 
     @Override
     public void startMasterChooser() {
         Intent data = new Intent();
-        //Log.d(this, "++++++++++++ ROS_MASTER_URI=" + SettingsFragment.getMasterUri());
         data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
         data.putExtra("NEW_MASTER", false);
         data.putExtra("ROS_MASTER_PRIVATE", false);
         onActivityResult(0, RESULT_OK, data);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            mFaceImage.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 }

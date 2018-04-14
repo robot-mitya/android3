@@ -16,6 +16,7 @@
         android:allowBackup="true">
         <activity
             android:name="com.robotmitya.robo_face.MainActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:screenOrientation="landscape"
             android:label="@string/app_name" >
             <intent-filter>
