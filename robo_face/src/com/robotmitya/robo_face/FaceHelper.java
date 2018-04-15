@@ -5,6 +5,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.robotmitya.robo_common.Constants.TAG;
@@ -14,7 +16,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  * @author Дмитрий Дзахов
  *
  */
-enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll, ftReadyToPlay };
+enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll };
 
 /**
  * Класс для управления лицом робота.
@@ -29,6 +31,8 @@ final class FaceHelper {
 	private FaceType mCurrentFace = FaceType.ftOk;
 
 	private int mResource = 0;
+
+	private HashMap<StateKey, Integer> mStateMatrix = new HashMap<>();
 
 	private void startRandomIdleAnimation() {
 		switch (mCurrentFace) {
@@ -58,7 +62,100 @@ final class FaceHelper {
 	 */
 	FaceHelper(final Activity activity, final ImageView imageView) {
 		mImageView = imageView;
-		
+
+//		mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftAngry), R.drawable.face_anim_transform_angry_to_angry);
+//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftBlue), R.drawable.face_anim_transform_angry_to_blue);
+//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftHappy), R.drawable.face_anim_transform_angry_to_happy);
+//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftIll), R.drawable.face_anim_transform_angry_to_ill);
+//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftOk), R.drawable.face_anim_transform_angry_to_ok);
+        //mStateMatrix.get()
+
+//		case ftBlue:
+//			if (face == FaceType.ftAngry) {
+//				resource = R.drawable.face_blue_to_angry;
+//			} else if (face == FaceType.ftBlue) {
+//				resource = R.drawable.face_blue_to_blue;
+//			} else if (face == FaceType.ftHappy) {
+//				resource = R.drawable.face_blue_to_happy;
+//			} else if (face == FaceType.ftIll) {
+//				resource = R.drawable.face_blue_to_ill;
+//			} else if (face == FaceType.ftOk) {
+//				resource = R.drawable.face_blue_to_ok;
+//			} else if (face == FaceType.ftReadyToPlay) {
+//				resource = R.drawable.face_blue_to_ready_to_play;
+//			} else {
+//				return false;
+//			}
+//			break;
+//		case ftHappy:
+//			if (face == FaceType.ftAngry) {
+//				resource = R.drawable.face_happy_to_angry;
+//			} else if (face == FaceType.ftBlue) {
+//				resource = R.drawable.face_happy_to_blue;
+//			} else if (face == FaceType.ftHappy) {
+//				resource = R.drawable.face_happy_to_happy;
+//			} else if (face == FaceType.ftIll) {
+//				resource = R.drawable.face_happy_to_ill;
+//			} else if (face == FaceType.ftOk) {
+//				resource = R.drawable.face_happy_to_ok;
+//			} else if (face == FaceType.ftReadyToPlay) {
+//				resource = R.drawable.face_happy_to_ready_to_play;
+//			} else {
+//				return false;
+//			}
+//			break;
+//		case ftIll:
+//			if (face == FaceType.ftAngry) {
+//				resource = R.drawable.face_ill_to_angry;
+//			} else if (face == FaceType.ftBlue) {
+//				resource = R.drawable.face_ill_to_blue;
+//			} else if (face == FaceType.ftHappy) {
+//				resource = R.drawable.face_ill_to_happy;
+//			} else if (face == FaceType.ftIll) {
+//				resource = R.drawable.face_ill_to_ill;
+//			} else if (face == FaceType.ftOk) {
+//				resource = R.drawable.face_ill_to_ok;
+//			} else if (face == FaceType.ftReadyToPlay) {
+//				resource = R.drawable.face_ill_to_ready_to_play;
+//			} else {
+//				return false;
+//			}
+//			break;
+//		case ftReadyToPlay:
+//			if (face == FaceType.ftAngry) {
+//				resource = R.drawable.face_ready_to_play_to_angry;
+//			} else if (face == FaceType.ftBlue) {
+//				resource = R.drawable.face_ready_to_play_to_blue;
+//			} else if (face == FaceType.ftHappy) {
+//				resource = R.drawable.face_ready_to_play_to_happy;
+//			} else if (face == FaceType.ftIll) {
+//				resource = R.drawable.face_ready_to_play_to_ill;
+//			} else if (face == FaceType.ftOk) {
+//				resource = R.drawable.face_ready_to_play_to_ok;
+//			} else if (face == FaceType.ftReadyToPlay) {
+//				resource = R.drawable.face_ready_to_play_to_ready_to_play;
+//			} else {
+//				return false;
+//			}
+//			break;
+//		case ftOk:
+//			if (face == FaceType.ftAngry) {
+//				resource = R.drawable.face_ok_to_angry;
+//			} else if (face == FaceType.ftBlue) {
+//				resource = R.drawable.face_ok_to_blue;
+//			} else if (face == FaceType.ftHappy) {
+//				resource = R.drawable.face_ok_to_happy;
+//			} else if (face == FaceType.ftIll) {
+//				resource = R.drawable.face_ok_to_ill;
+//			} else if (face == FaceType.ftOk) {
+//				resource = R.drawable.face_ok_to_ok;
+//			} else if (face == FaceType.ftReadyToPlay) {
+//				resource = R.drawable.face_ok_to_ready_to_play;
+//			} else {
+//				return false;
+//			}
+//			break;
+
 		// Thread для генерации Idle-событий. События генерируются с переменной периодичностью.
 		// Промежутки составляют 4 сек + random(4 сек).
         new Thread() {
@@ -228,4 +325,21 @@ final class FaceHelper {
 		mAnimation = (AnimationDrawable) mImageView.getBackground();
 		mAnimation.start();
 	}
+
+	private class StateKey {
+		FaceType FaceFrom;
+		FaceType FaceTo;
+
+        StateKey(FaceType faceFrom, FaceType faceTo) {
+            FaceFrom = faceFrom;
+            FaceTo = faceTo;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (!(other instanceof StateKey)) return false;
+            StateKey otherStateKey = (StateKey) other;
+            return FaceFrom == otherStateKey.FaceFrom && FaceTo == otherStateKey.FaceTo;
+        }
+    }
 }

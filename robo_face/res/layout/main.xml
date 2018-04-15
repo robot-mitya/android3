@@ -11,8 +11,8 @@
         android:background="@android:color/black"
         android:contentDescription="@string/faceDescription" />
 
-    <!--android:src="@drawable/face_idle"-->
-    <!--android:stateListAnimator="@drawable/face_idle"-->
+    <!--android:src="@drawaface_okidle"-->
+    <!--android:stateListAnimator="@drawaface_okidle"-->
 
 
 </LinearLayout>
