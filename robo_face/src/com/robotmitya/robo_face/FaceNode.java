@@ -1,5 +1,8 @@
 package com.robotmitya.robo_face;
 
+import android.icu.text.LocaleDisplayNames;
+import android.util.Log;
+
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
@@ -9,7 +12,7 @@ import org.ros.node.topic.Subscriber;
 
 import com.robotmitya.robo_common.Constants;
 
-import std_msgs.String;
+import static com.robotmitya.robo_common.Constants.TAG;
 
 /**
  *
@@ -34,20 +37,24 @@ class FaceNode implements NodeMain {
                 Constants.TopicName.Face, std_msgs.String._TYPE);
         subscriber.addMessageListener(new MessageListener<std_msgs.String>() {
             @Override
-            public void onNewMessage(std_msgs.String string) {
-                int resource;
-                if (string.getData().contentEquals("happy")) {
-
-                } else if (string.getData().contentEquals("blue")) {
-
-                } else if (string.getData().contentEquals("angry")) {
-
-                } else if (string.getData().contentEquals("ill")) {
-
+            public void onNewMessage(std_msgs.String message) {
+                //Log.d(TAG, "+++++++++++++ " + message.getData());
+                FaceType faceType;
+                if (message.getData().contentEquals("angry")) {
+                    faceType = FaceType.ftAngry;
+                } else if (message.getData().contentEquals("blue")) {
+                    faceType = FaceType.ftBlue;
+                } else if (message.getData().contentEquals("happy")) {
+                        faceType = FaceType.ftHappy;
+                } else if (message.getData().contentEquals("ill")) {
+                    faceType = FaceType.ftIll;
+                } else if (message.getData().contentEquals("ok")) {
+                    faceType = FaceType.ftOk;
                 } else {
-
+                    Log.e(TAG, String.format("Wrong command in the \'face\' topic: \'%s\'", message));
+                    return;
                 }
-                //mFaceHelper.setFace(resource);
+                mFaceHelper.setFace(faceType);
             }
         });
     }

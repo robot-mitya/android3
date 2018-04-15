@@ -5,6 +5,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.common.hash.HashCode;
+
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,30 +32,29 @@ final class FaceHelper {
 	
 	private FaceType mCurrentFace = FaceType.ftOk;
 
-	private int mResource = 0;
-
 	private HashMap<StateKey, Integer> mStateMatrix = new HashMap<>();
 
 	private void startRandomIdleAnimation() {
+	    int resource = 0;
 		switch (mCurrentFace) {
 			case ftOk:
 				final int choice = ThreadLocalRandom.current().nextInt(5);
 				switch (choice) {
 					case 0: // вероятность 20%
-						mResource = R.drawable.face_anim_idle_2;
+						resource = R.drawable.face_anim_idle_2;
 						break;
 					case 1: // вероятность 20%
-						mResource = R.drawable.face_anim_idle_3;
+						resource = R.drawable.face_anim_idle_3;
 						break;
 					default: // вероятность 60%
-						mResource = R.drawable.face_anim_idle_1;
+						resource = R.drawable.face_anim_idle_1;
 						break;
 				}
 				break;
 			default:
 				return;
 		}
-		startAnimation();
+		startAnimation(resource);
 	}
 
 	/**
@@ -63,98 +64,7 @@ final class FaceHelper {
 	FaceHelper(final Activity activity, final ImageView imageView) {
 		mImageView = imageView;
 
-//		mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftAngry), R.drawable.face_anim_transform_angry_to_angry);
-//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftBlue), R.drawable.face_anim_transform_angry_to_blue);
-//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftHappy), R.drawable.face_anim_transform_angry_to_happy);
-//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftIll), R.drawable.face_anim_transform_angry_to_ill);
-//        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftOk), R.drawable.face_anim_transform_angry_to_ok);
-        //mStateMatrix.get()
-
-//		case ftBlue:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_blue_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_blue_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_blue_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_blue_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_blue_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_blue_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftHappy:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_happy_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_happy_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_happy_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_happy_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_happy_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_happy_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftIll:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ill_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ill_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ill_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ill_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ill_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ill_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftReadyToPlay:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ready_to_play_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ready_to_play_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ready_to_play_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ready_to_play_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ready_to_play_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ready_to_play_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftOk:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ok_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ok_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ok_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ok_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ok_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ok_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
+		fillAnimationStateMatrix();
 
 		// Thread для генерации Idle-событий. События генерируются с переменной периодичностью.
 		// Промежутки составляют 4 сек + random(4 сек).
@@ -180,148 +90,67 @@ final class FaceHelper {
             }
         }.start();
 	}
+
+	private void fillAnimationStateMatrix() {
+        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftAngry), R.drawable.face_anim_angry_to_angry);
+        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftBlue), R.drawable.face_anim_angry_to_blue);
+        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftHappy), R.drawable.face_anim_angry_to_happy);
+        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftIll), R.drawable.face_anim_angry_to_ill);
+        mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftOk), R.drawable.face_anim_angry_to_ok);
+
+        mStateMatrix.put(new StateKey(FaceType.ftBlue, FaceType.ftAngry), R.drawable.face_anim_blue_to_angry);
+        mStateMatrix.put(new StateKey(FaceType.ftBlue, FaceType.ftBlue), R.drawable.face_anim_blue_to_blue);
+        mStateMatrix.put(new StateKey(FaceType.ftBlue, FaceType.ftHappy), R.drawable.face_anim_blue_to_happy);
+        mStateMatrix.put(new StateKey(FaceType.ftBlue, FaceType.ftIll), R.drawable.face_anim_blue_to_ill);
+        mStateMatrix.put(new StateKey(FaceType.ftBlue, FaceType.ftOk), R.drawable.face_anim_blue_to_ok);
+
+        mStateMatrix.put(new StateKey(FaceType.ftHappy, FaceType.ftAngry), R.drawable.face_anim_happy_to_angry);
+        mStateMatrix.put(new StateKey(FaceType.ftHappy, FaceType.ftBlue), R.drawable.face_anim_happy_to_blue);
+        mStateMatrix.put(new StateKey(FaceType.ftHappy, FaceType.ftHappy), R.drawable.face_anim_happy_to_happy);
+        mStateMatrix.put(new StateKey(FaceType.ftHappy, FaceType.ftIll), R.drawable.face_anim_happy_to_ill);
+        mStateMatrix.put(new StateKey(FaceType.ftHappy, FaceType.ftOk), R.drawable.face_anim_happy_to_ok);
+
+        mStateMatrix.put(new StateKey(FaceType.ftIll, FaceType.ftAngry), R.drawable.face_anim_ill_to_angry);
+        mStateMatrix.put(new StateKey(FaceType.ftIll, FaceType.ftBlue), R.drawable.face_anim_ill_to_blue);
+        mStateMatrix.put(new StateKey(FaceType.ftIll, FaceType.ftHappy), R.drawable.face_anim_ill_to_happy);
+        mStateMatrix.put(new StateKey(FaceType.ftIll, FaceType.ftIll), R.drawable.face_anim_ill_to_ill);
+        mStateMatrix.put(new StateKey(FaceType.ftIll, FaceType.ftOk), R.drawable.face_anim_ill_to_ok);
+
+        mStateMatrix.put(new StateKey(FaceType.ftOk, FaceType.ftAngry), R.drawable.face_anim_ok_to_angry);
+        mStateMatrix.put(new StateKey(FaceType.ftOk, FaceType.ftBlue), R.drawable.face_anim_ok_to_blue);
+        mStateMatrix.put(new StateKey(FaceType.ftOk, FaceType.ftHappy), R.drawable.face_anim_ok_to_happy);
+        mStateMatrix.put(new StateKey(FaceType.ftOk, FaceType.ftIll), R.drawable.face_anim_ok_to_ill);
+        mStateMatrix.put(new StateKey(FaceType.ftOk, FaceType.ftOk), R.drawable.face_anim_ok_to_ok);
+	}
+
+	/**
+	 * Получение текущего состояния лица.
+	 * @return тип установленного выражения лица.
+	 */
+	@SuppressWarnings("unused")
+    FaceType getFace() {
+		return mCurrentFace;
+	}
 	
-//	/**
-//	 * Получение текущего состояния лица.
-//	 * @return тип установленного выражения лица.
-//	 */
-//	public FaceType getFace() {
-//		return mCurrentFace;
-//	}
+	/**
+	 * Установка выражения лица.
+	 * @param face новое выражение лица.
+	 */
+	void setFace(final FaceType face) {
+		final StateKey transformation = new StateKey(mCurrentFace, face);
+		Integer resource = mStateMatrix.get(transformation);
+		if (resource == null) return;
+		mCurrentFace = face;
+		startAnimation(resource);
+	}
 	
-//	/**
-//	 * Установка выражения лица.
-//	 * @param face новое выражение лица.
-//	 * @return true если началась смена выражения лица, false если смена лица уже происходит.
-//	 */
-//	public boolean setFace(final FaceType face) {
-//		int resource = 0;
-//
-//		switch (mCurrentFace) {
-//		case ftAngry:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_angry_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_angry_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_angry_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_angry_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_angry_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_angry_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftBlue:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_blue_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_blue_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_blue_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_blue_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_blue_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_blue_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftHappy:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_happy_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_happy_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_happy_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_happy_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_happy_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_happy_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftIll:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ill_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ill_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ill_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ill_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ill_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ill_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftReadyToPlay:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ready_to_play_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ready_to_play_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ready_to_play_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ready_to_play_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ready_to_play_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ready_to_play_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		case ftOk:
-//			if (face == FaceType.ftAngry) {
-//				resource = R.drawable.face_ok_to_angry;
-//			} else if (face == FaceType.ftBlue) {
-//				resource = R.drawable.face_ok_to_blue;
-//			} else if (face == FaceType.ftHappy) {
-//				resource = R.drawable.face_ok_to_happy;
-//			} else if (face == FaceType.ftIll) {
-//				resource = R.drawable.face_ok_to_ill;
-//			} else if (face == FaceType.ftOk) {
-//				resource = R.drawable.face_ok_to_ok;
-//			} else if (face == FaceType.ftReadyToPlay) {
-//				resource = R.drawable.face_ok_to_ready_to_play;
-//			} else {
-//				return false;
-//			}
-//			break;
-//		default:
-//			return false;
-//		}
-//
-//		mCurrentFace = face;
-//		startAnimation(resource);
-//
-////		if (face == FaceType.ftReadyToPlay) {
-////			final int readyToPlayPause = 5000;
-////			mHandlerDelayedAction.sendEmptyMessageDelayed(0, readyToPlayPause);
-////		}
-//
-//        return true;
-//	}
-	
-	private void startAnimation() {
+	private void startAnimation(int resource) {
         if (mAnimation != null) {
             mAnimation.stop();
             mAnimation = null;
             System.gc();
         }
-		mImageView.setBackgroundResource(mResource);
+		mImageView.setBackgroundResource(resource);
 		mAnimation = (AnimationDrawable) mImageView.getBackground();
 		mAnimation.start();
 	}
@@ -340,6 +169,11 @@ final class FaceHelper {
             if (!(other instanceof StateKey)) return false;
             StateKey otherStateKey = (StateKey) other;
             return FaceFrom == otherStateKey.FaceFrom && FaceTo == otherStateKey.FaceTo;
+        }
+
+        @Override
+        public int hashCode() {
+            return (FaceFrom.ordinal() << 16) + FaceTo.ordinal();
         }
     }
 }
