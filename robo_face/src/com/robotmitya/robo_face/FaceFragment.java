@@ -2,10 +2,14 @@ package com.robotmitya.robo_face;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import static com.robotmitya.robo_common.Constants.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +32,16 @@ public class FaceFragment extends Fragment {
         mFaceImage = (ImageView) result.findViewById(R.id.faceImage);
         mFaceHelper = new FaceHelper(this.getActivity(), mFaceImage);
         mFaceNode = new FaceNode(mFaceHelper);
+
+        ImageButton imageButton = (ImageButton) result.findViewById(R.id.settingsButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO ...
+                Log.d(TAG, "Settings dialog");
+            }
+        });
+
         return result;
     }
 
