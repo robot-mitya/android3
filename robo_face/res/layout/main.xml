@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+<!--
+    <ru.robotmitya.robohead.EyePreviewView
+        android:id="@+id/eye_preview_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="20dp" />
+-->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+<!--
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,8 +31,5 @@
         android:background="@android:color/black"
         android:contentDescription="@string/faceDescription" />
 
-    <!--android:src="@drawaface_okidle"-->
-    <!--android:stateListAnimator="@drawaface_okidle"-->
-
-
 </LinearLayout>
+-->

@@ -145,6 +145,9 @@ final class FaceHelper {
 	}
 	
 	private void startAnimation(int resource) {
+	    if (mImageView == null)
+	        return;
+
         if (mAnimation != null) {
             mAnimation.stop();
             mAnimation = null;

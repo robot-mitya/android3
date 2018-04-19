@@ -19,9 +19,7 @@ package com.robotmitya.robo_face;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.robotmitya.robo_common.RoboHelper;
 
@@ -36,11 +34,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
-    private FaceNode mFaceNode;
-    private ImageView mFaceImage;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private FaceHelper mFaceHelper;
+    private FaceFragment mFaceFragment;
 
     public MainActivity() {
         super("RoboFace", "RoboFace");
@@ -52,9 +46,15 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mFaceImage = (ImageView) findViewById(R.id.faceImage);
-        mFaceHelper = new FaceHelper(this, mFaceImage);
-        mFaceNode = new FaceNode(mFaceHelper);
+        if (findViewById(R.id.fragment_container) == null)
+            return;
+
+        if (savedInstanceState != null)
+            return;
+
+        mFaceFragment = new FaceFragment();
+
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, mFaceFragment).commit();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends RosActivity {
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
 
-        nodeMainExecutor.execute(mFaceNode, nodeConfiguration);
+        nodeMainExecutor.execute(mFaceFragment.getFaceNode(), nodeConfiguration);
     }
 
     @Override
@@ -92,14 +92,7 @@ public class MainActivity extends RosActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            mFaceImage.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
+        if (hasFocus)
+            mFaceFragment.setFaceFullscreen();
     }
 }

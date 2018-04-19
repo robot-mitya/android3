@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+<!--
+    <PreferenceCategory
+        android:key="@string/preference_ros_core_key"
+        android:title="@string/preference_ros_core">
+
+        <EditTextPreference
+            android:key="@string/option_master_uri_key"
+            android:title="@string/option_master_uri_title"
+            android:summary="@string/option_master_uri_summary"
+            android:defaultValue="@string/option_master_uri_default_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/preference_camera">
+
+        <ListPreference
+            android:key="@string/option_camera_index_key"
+            android:title="@string/option_camera_index_title"
+            android:summary="@string/option_camera_index_summary"
+            android:dialogTitle="@string/option_camera_index_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ListPreference
+            android:key="@string/option_front_camera_mode_key"
+            android:title="@string/option_front_camera_mode_title"
+            android:summary="@string/option_front_camera_mode_summary"
+            android:dialogTitle="@string/option_front_camera_mode_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ListPreference
+            android:key="@string/option_back_camera_mode_key"
+            android:title="@string/option_back_camera_mode_title"
+            android:summary="@string/option_back_camera_mode_summary"
+            android:dialogTitle="@string/option_back_camera_mode_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <CheckBoxPreference
+            android:key="@string/option_drive_reverse_key"
+            android:title="@string/option_drive_reverse_title"
+            android:summary="@string/option_drive_reverse_summary" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/preference_bluetooth">
+
+        <EditTextPreference
+            android:key="@string/option_robobody_mac_key"
+            android:title="@string/option_robobody_mac_title"
+            android:summary="@string/option_robobody_mac_summary"
+            android:defaultValue="@string/option_robobody_mac_default_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </PreferenceCategory>
+-->
+</PreferenceScreen>

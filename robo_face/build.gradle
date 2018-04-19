@@ -15,30 +15,30 @@
  */
 
 repositories {
-  maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots/"
-  }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
 project.ext.jomlVersion = "1.9.3-SNAPSHOT"
 
 dependencies {
-  compile "org.joml:joml-android:${jomlVersion}"
-  compile 'org.ros.rosjava_core:rosjava_tutorial_pubsub:[0.3,0.4)'
-  compile project(':android_15')
-  compile project(':robo_common')
+    compile "org.joml:joml-android:${jomlVersion}"
+    compile 'org.ros.rosjava_core:rosjava_tutorial_pubsub:[0.3,0.4)'
+    compile project(':android_15')
+    compile project(':robo_common')
 }
 
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 25
-  defaultConfig {
-    minSdkVersion 21
-    applicationId "com.robotmitya.robo_face"
-    targetSdkVersion 21
-    versionCode 1
-    versionName "1.0"
-  }
-  productFlavors {
-  }
+    compileSdkVersion 25
+    defaultConfig {
+        minSdkVersion 21
+        applicationId "com.robotmitya.robo_face"
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    productFlavors {
+    }
 }
