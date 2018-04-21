@@ -35,6 +35,9 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
+    private FaceHelper mFaceHelper;
+    private FaceNode mFaceNode;
+
     private SettingsFragment mSettingsFragment;
     private FaceFragment mFaceFragment;
 
@@ -44,8 +47,12 @@ public class MainActivity extends RosActivity {
     public MainActivity() {
         super("RoboFace", "RoboFace");
 
+        mFaceHelper = new FaceHelper(this);
+        mFaceNode = new FaceNode(mFaceHelper);
+
         mSettingsFragment = new SettingsFragment();
         mFaceFragment = new FaceFragment();
+        mFaceFragment.setFaceNode(mFaceNode);
         mFaceFragment.setSettingsFragment(mSettingsFragment);
     }
 

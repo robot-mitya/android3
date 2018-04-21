@@ -64,13 +64,17 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         //Context context = getActivity();
 
+        boolean result = false;
         if (preference == mEditTextPreferenceMasterUri) {
             SettingsCommon.setMasterUri((String) newValue);
             mEditTextPreferenceMasterUri.setTitle(
                     getString(R.string.option_master_uri_title) + ": " + newValue);
-            return true;
+            result = true;
         }
 
-        return false;
+        if (result) {
+            SettingsCommon.save(getActivity());
+        }
+        return result;
     }
 }

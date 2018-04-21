@@ -5,9 +5,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.common.hash.HashCode;
-
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -18,7 +15,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  * @author Дмитрий Дзахов
  *
  */
-enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll };
+enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll }
 
 /**
  * Класс для управления лицом робота.
@@ -26,7 +23,8 @@ enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll };
  *
  */
 final class FaceHelper {
-	private ImageView mImageView;
+    private Activity mActivity;
+    private ImageView mFaceImage;
 
 	private AnimationDrawable mAnimation = null;
 	
@@ -35,7 +33,7 @@ final class FaceHelper {
 	private HashMap<StateKey, Integer> mStateMatrix = new HashMap<>();
 
 	private void startRandomIdleAnimation() {
-	    int resource = 0;
+	    int resource;
 		switch (mCurrentFace) {
 			case ftOk:
 				final int choice = ThreadLocalRandom.current().nextInt(5);
@@ -59,15 +57,19 @@ final class FaceHelper {
 
 	/**
 	 * Конструктор класса.
-	 * @param imageView контрол для вывода анимации.
 	 */
-	FaceHelper(final Activity activity, final ImageView imageView) {
-		mImageView = imageView;
-
+	FaceHelper(final Activity activity) {
+	    mActivity = activity;
 		fillAnimationStateMatrix();
+	}
 
-		// Thread для генерации Idle-событий. События генерируются с переменной периодичностью.
-		// Промежутки составляют 4 сек + random(4 сек).
+	void setFaceImage(final ImageView faceImage) {
+	    mFaceImage = faceImage;
+    }
+
+    void startIdleAnimation() {
+        // Thread для генерации Idle-событий. События генерируются с переменной периодичностью.
+        // Промежутки составляют 4 сек + random(4 сек).
         new Thread() {
             @Override
             public void run() {
@@ -80,7 +82,7 @@ final class FaceHelper {
                     } catch (InterruptedException e) {
                         Log.e(TAG, e.toString());
                     }
-                    activity.runOnUiThread(new Runnable() {
+                    mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             startRandomIdleAnimation();
@@ -89,9 +91,9 @@ final class FaceHelper {
                 }
             }
         }.start();
-	}
+    }
 
-	private void fillAnimationStateMatrix() {
+    private void fillAnimationStateMatrix() {
         mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftAngry), R.drawable.face_anim_angry_to_angry);
         mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftBlue), R.drawable.face_anim_angry_to_blue);
         mStateMatrix.put(new StateKey(FaceType.ftAngry, FaceType.ftHappy), R.drawable.face_anim_angry_to_happy);
@@ -143,19 +145,29 @@ final class FaceHelper {
 		mCurrentFace = face;
 		startAnimation(resource);
 	}
+
+	void updateFace() {
+	    setFace(mCurrentFace);
+    }
 	
-	private void startAnimation(int resource) {
-	    if (mImageView == null)
+	private void startAnimation(final int resource) {
+	    if (mFaceImage == null)
 	        return;
 
-        if (mAnimation != null) {
-            mAnimation.stop();
-            mAnimation = null;
-            System.gc();
-        }
-		mImageView.setBackgroundResource(resource);
-		mAnimation = (AnimationDrawable) mImageView.getBackground();
-		mAnimation.start();
+	    mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAnimation != null) {
+                    mAnimation.stop();
+                    mAnimation = null;
+                    System.gc();
+                }
+
+                mFaceImage.setBackgroundResource(resource);
+                mAnimation = (AnimationDrawable) mFaceImage.getBackground();
+                mAnimation.start();
+            }
+        });
 	}
 
 	private class StateKey {

@@ -1,7 +1,7 @@
 package com.robotmitya.robo_face;
 
-import android.icu.text.LocaleDisplayNames;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
@@ -21,9 +21,19 @@ import static com.robotmitya.robo_common.Constants.TAG;
 class FaceNode implements NodeMain {
 
     private final FaceHelper mFaceHelper;
+    private ImageView mFaceImage;
 
     FaceNode(final FaceHelper faceHelper) {
         mFaceHelper = faceHelper;
+    }
+
+    FaceHelper getFaceHelper() {
+        return mFaceHelper;
+    }
+
+    void setFaceImage(final ImageView faceImage) {
+        mFaceImage = faceImage;
+        mFaceHelper.setFaceImage(faceImage);
     }
 
     @Override
@@ -54,7 +64,8 @@ class FaceNode implements NodeMain {
                     Log.e(TAG, String.format("Wrong command in the \'face\' topic: \'%s\'", message));
                     return;
                 }
-                mFaceHelper.setFace(faceType);
+                if (mFaceImage != null)
+                    mFaceHelper.setFace(faceType);
             }
         });
     }

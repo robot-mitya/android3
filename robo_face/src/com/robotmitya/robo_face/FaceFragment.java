@@ -12,10 +12,13 @@ import android.widget.ImageView;
 public class FaceFragment extends Fragment {
     private SettingsFragment mSettingsFragment;
     private ImageView mFaceImage;
-    private FaceHelper mFaceHelper;
     private FaceNode mFaceNode;
 
     public FaceFragment() {
+    }
+
+    void setFaceNode(final FaceNode faceNode) {
+        mFaceNode = faceNode;
     }
 
     public void setSettingsFragment(final SettingsFragment settingsFragment) {
@@ -29,8 +32,9 @@ public class FaceFragment extends Fragment {
             return null;
 
         mFaceImage = (ImageView) result.findViewById(R.id.faceImage);
-        mFaceHelper = new FaceHelper(this.getActivity(), mFaceImage);
-        mFaceNode = new FaceNode(mFaceHelper);
+        mFaceNode.setFaceImage(mFaceImage);
+        mFaceNode.getFaceHelper().updateFace();
+        mFaceNode.getFaceHelper().startIdleAnimation();
 
         ImageButton imageButton = (ImageButton) result.findViewById(R.id.settingsButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
