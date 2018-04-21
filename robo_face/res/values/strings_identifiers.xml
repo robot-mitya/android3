@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="preference_ros_core_key">preference_ros_core</string>
+
+    <string name="option_master_uri_key">option_master_uri</string>
+    <string name="option_master_uri_default_value">http://localhost:11311</string>
+<!--
+    <string name="option_json_camera_sizes_set">option_json_camera_sizes_set</string>
+    <string name="option_camera_index_key">option_camera_index</string>
+    <string name="option_front_camera_mode_key">option_first_camera_mode</string>
+    <string name="option_back_camera_mode_key">option_second_camera_mode</string>
+    <string name="option_drive_reverse_key">option_drive_reverse</string>
+
+    <string name="option_robobody_mac_key">option_robobody_mac</string>
+    <string name="option_robobody_mac_default_value">00:00:00:00:00:00</string>
+-->
+</resources>

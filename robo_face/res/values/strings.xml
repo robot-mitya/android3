@@ -5,4 +5,9 @@
 
     <string name="faceDescription">Mitya\'s face</string>
 
+    <string name="preference_ros_core">ROS core</string>
+    <string name="option_master_uri_title">Master URI</string>
+    <string name="option_master_uri_summary">URI of ROS core (http://&lt;ip address&gt;:&lt;port&gt;)</string>
+
+
 </resources>

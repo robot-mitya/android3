@@ -1,6 +1,7 @@
 package com.robotmitya.robo_face;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +12,6 @@ import android.widget.ImageView;
 
 import static com.robotmitya.robo_common.Constants.TAG;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FaceFragment extends Fragment {
 
     private ImageView mFaceImage;
@@ -37,11 +35,15 @@ public class FaceFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO ...
-                Log.d(TAG, "Settings dialog");
+                SettingsFragment settingsFragment = new SettingsFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, settingsFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
+        setFaceFullscreen();
         return result;
     }
 
