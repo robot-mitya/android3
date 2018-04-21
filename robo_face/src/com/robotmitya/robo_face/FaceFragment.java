@@ -3,22 +3,23 @@ package com.robotmitya.robo_face;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import static com.robotmitya.robo_common.Constants.TAG;
-
 public class FaceFragment extends Fragment {
-
+    private SettingsFragment mSettingsFragment;
     private ImageView mFaceImage;
     private FaceHelper mFaceHelper;
     private FaceNode mFaceNode;
 
     public FaceFragment() {
+    }
+
+    public void setSettingsFragment(final SettingsFragment settingsFragment) {
+        mSettingsFragment = settingsFragment;
     }
 
     @Override
@@ -35,15 +36,18 @@ public class FaceFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingsFragment settingsFragment = new SettingsFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, settingsFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if (mSettingsFragment != null) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, mSettingsFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
         setFaceFullscreen();
+
+        MainActivity.fragmentType = MainActivity.FragmentType.FACE;
         return result;
     }
 
@@ -52,14 +56,13 @@ public class FaceFragment extends Fragment {
     }
 
     public void setFaceFullscreen() {
-        if (mFaceImage == null)
-            return;
-        mFaceImage.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (mFaceImage != null)
+            mFaceImage.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 }

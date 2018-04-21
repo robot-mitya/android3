@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <PreferenceCategory
-        android:key="  @string/preference_ros_core_key"
+        android:key="@string/preference_ros_core_key"
         android:title="@string/preference_ros_core">
 
         <EditTextPreference

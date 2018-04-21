@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.robotmitya.robo_common.RoboHelper;
+import com.robotmitya.robo_common.SettingsCommon;
 
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
@@ -34,10 +35,18 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
+    private SettingsFragment mSettingsFragment;
     private FaceFragment mFaceFragment;
+
+    public enum FragmentType { FACE, SETTINGS }
+    public static FragmentType fragmentType;
 
     public MainActivity() {
         super("RoboFace", "RoboFace");
+
+        mSettingsFragment = new SettingsFragment();
+        mFaceFragment = new FaceFragment();
+        mFaceFragment.setSettingsFragment(mSettingsFragment);
     }
 
     @Override
@@ -46,14 +55,15 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        SettingsCommon.load(this);
+
         if (findViewById(R.id.fragment_container) == null)
             return;
 
         if (savedInstanceState != null)
             return;
 
-        mFaceFragment = new FaceFragment();
-
+        fragmentType = FragmentType.FACE;
         getFragmentManager().beginTransaction().add(R.id.fragment_container, mFaceFragment).commit();
     }
 
@@ -83,7 +93,9 @@ public class MainActivity extends RosActivity {
     @Override
     public void startMasterChooser() {
         Intent data = new Intent();
-        data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
+        //Log.d(TAG, "+++++++++++++++++++++++++++++ " + SettingsCommon.getMasterUri());
+        //data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
+        data.putExtra("ROS_MASTER_URI", SettingsCommon.getMasterUri());
         data.putExtra("NEW_MASTER", false);
         data.putExtra("ROS_MASTER_PRIVATE", false);
         onActivityResult(0, RESULT_OK, data);
@@ -92,7 +104,11 @@ public class MainActivity extends RosActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus)
-            mFaceFragment.setFaceFullscreen();
+        if (hasFocus) {
+            if (fragmentType == FragmentType.FACE)
+                mFaceFragment.setFaceFullscreen();
+            else if (fragmentType == FragmentType.SETTINGS)
+                mSettingsFragment.setSettingsFullscreen();
+        }
     }
 }
