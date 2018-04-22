@@ -35,9 +35,6 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
-    private FaceHelper mFaceHelper;
-    private FaceNode mFaceNode;
-
     private SettingsFragment mSettingsFragment;
     private FaceFragment mFaceFragment;
 
@@ -47,12 +44,12 @@ public class MainActivity extends RosActivity {
     public MainActivity() {
         super("RoboFace", "RoboFace");
 
-        mFaceHelper = new FaceHelper(this);
-        mFaceNode = new FaceNode(mFaceHelper);
+        FaceHelper faceHelper = new FaceHelper(this);
+        FaceNode faceNode = new FaceNode(faceHelper);
 
         mSettingsFragment = new SettingsFragment();
         mFaceFragment = new FaceFragment();
-        mFaceFragment.setFaceNode(mFaceNode);
+        mFaceFragment.setFaceNode(faceNode);
         mFaceFragment.setSettingsFragment(mSettingsFragment);
     }
 
@@ -101,7 +98,6 @@ public class MainActivity extends RosActivity {
     @Override
     public void startMasterChooser() {
         Intent data = new Intent();
-        //Log.d(TAG, "+++++++++++++++++++++++++++++ " + SettingsCommon.getMasterUri());
         //data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
         data.putExtra("ROS_MASTER_URI", SettingsCommon.getMasterUri());
         data.putExtra("NEW_MASTER", false);

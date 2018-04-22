@@ -3,13 +3,27 @@
 
     <string name="app_name">RoboFace</string>
 
-    <string name="faceDescription">Mitya\'s face</string>
+    <string name="faceImageDescription">Mitya\'s face</string>
+    <string name="settingsImageDescription">Settings</string>
 
 
     <string name="preference_ros_core">ROS core</string>
     <string name="option_master_uri_title">Master URI</string>
     <string name="option_master_uri_summary">URI of ROS core (http://&lt;ip address&gt;:&lt;port&gt;)</string>
 
+
+    <string name="preference_camera">Video</string>
+    <string name="option_camera_index_title">Camera</string>
+    <string name="option_camera_index_summary">Select camera for video streaming</string>
+    <string name="option_camera_index_dialog_title">Select camera</string>
+
+    <string name="option_front_camera_mode_title">Front camera</string>
+    <string name="option_front_camera_mode_summary">Select front camera mode for video streaming</string>
+    <string name="option_front_camera_mode_dialog_title">Select front camera mode</string>
+
+    <string name="option_back_camera_mode_title">Back camera</string>
+    <string name="option_back_camera_mode_summary">Select back camera mode for video streaming</string>
+    <string name="option_back_camera_mode_dialog_title">Select back camera mode</string>
 
     <string name="option_camera_disabled_entry">Disabled</string>
     <string name="option_camera_front_entry">Front camera</string>

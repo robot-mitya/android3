@@ -57,6 +57,7 @@ public class EyePreview extends RosCameraPreviewView {
             @Override
             public void run() {
                 releaseCamera();
+                //noinspection deprecation
                 setCamera(Camera.open(cameraIndex));
             }
         };

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:contentDescription="@string/faceDescription" />
+        android:contentDescription="@string/faceImageDescription" />
 
     <ImageButton
         android:id="@+id/settingsButton"
@@ -24,6 +24,7 @@
         android:src="@drawable/ic_settings"
         android:background="@android:color/transparent"
         android:layout_alignBottom="@+id/faceImage"
-        android:layout_alignRight="@+id/faceImage" />
+        android:layout_alignEnd="@+id/faceImage"
+        android:contentDescription="@string/settingsImageDescription" />
 
 </RelativeLayout>
