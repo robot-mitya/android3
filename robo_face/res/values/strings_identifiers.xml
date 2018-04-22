@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="option_json_camera_sizes_set">option_json_camera_sizes_set</string>
+    <string name="option_camera_index_key">option_camera_index</string>
+    <string name="option_front_camera_mode_key">option_first_camera_mode</string>
+    <string name="option_back_camera_mode_key">option_second_camera_mode</string>
+    <!--<string name="option_drive_reverse_key">option_drive_reverse</string>-->
+
+</resources>

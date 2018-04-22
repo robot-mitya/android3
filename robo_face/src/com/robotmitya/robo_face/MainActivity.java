@@ -63,6 +63,7 @@ public class MainActivity extends RosActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         SettingsCommon.load(this);
+        SettingsFace.load(this);
 
         if (findViewById(R.id.fragment_container) == null)
             return;

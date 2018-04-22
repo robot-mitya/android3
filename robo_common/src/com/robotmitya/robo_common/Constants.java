@@ -11,6 +11,7 @@ public class Constants {
     public class NodeName {
         public static final String Controller = "robot_mitya/controller_node";
         public static final String Face = "robot_mitya/face_node";
+        public static final String Eye = "robot_mitya/eye_node";
     }
 
     public class TopicName {
@@ -19,5 +20,11 @@ public class Constants {
         public static final String DriveTowards = "robot_mitya/drive_towards";
         public static final String ControllerImu = "robot_mitya/controller_imu";
         public static final String Face = "robot_mitya/face";
+    }
+
+    public final class Camera {
+        public static final int Disabled = 0;
+        public static final int Front = 1;
+        public static final int Back = 2;
     }
 }

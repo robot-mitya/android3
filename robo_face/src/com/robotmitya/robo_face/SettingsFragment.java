@@ -1,5 +1,6 @@
 package com.robotmitya.robo_face;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -73,7 +74,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
 
         if (result) {
-            SettingsCommon.save(getActivity());
+            final Context context = getActivity();
+            SettingsCommon.save(context);
+            SettingsFace.save(context);
         }
         return result;
     }
