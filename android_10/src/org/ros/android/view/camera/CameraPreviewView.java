@@ -148,7 +148,7 @@ public class CameraPreviewView extends ViewGroup {
     camera.setParameters(parameters);
   }
 
-  private Size getOptimalPreviewSize(List<Size> sizes, int width, int height) {
+  protected Size getOptimalPreviewSize(List<Size> sizes, int width, int height) {
     Preconditions.checkNotNull(sizes);
     double targetRatio = (double) width / height;
     double minimumDifference = Double.MAX_VALUE;

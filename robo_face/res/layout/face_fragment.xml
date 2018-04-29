@@ -5,14 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-    This view just intended to hide camera preview.
-    -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/black" />
-
     <ImageView
         android:id="@+id/faceImage"
         android:layout_width="match_parent"

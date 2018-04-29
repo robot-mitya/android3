@@ -11,6 +11,12 @@
         android:layout_height="match_parent"
         android:layout_margin="20dp" />
 
+    <!-- This view just intended to hide camera preview. -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black" />
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"

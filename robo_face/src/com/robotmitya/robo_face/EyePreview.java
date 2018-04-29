@@ -12,6 +12,8 @@ import org.ros.android.view.camera.RosCameraPreviewView;
 import org.ros.namespace.GraphName;
 import org.ros.node.Node;
 
+import java.util.List;
+
 /**
  *
  * Created by dmitrydzz on 21.04.18.
@@ -76,5 +78,14 @@ public class EyePreview extends RosCameraPreviewView {
 //        message.arg1 = VIDEO_STOPPED;
 //        message.arg2 = -1;
 //        mHandler.sendMessage(message);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
+        final int sizeIndex = mSelectedCameraMode & 0xff;
+        if (sizeIndex == 0xff) {
+            return super.getOptimalPreviewSize(sizes, width, height);
+        }
+        return sizes.get(sizeIndex);
     }
 }
