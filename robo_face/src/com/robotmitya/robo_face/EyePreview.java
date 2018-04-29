@@ -42,7 +42,7 @@ public class EyePreview extends RosCameraPreviewView {
         stopVideoStreaming();
     }
 
-    public void startVideoStreaming(final String cameraMode) {
+    void startVideoStreaming(final String cameraMode) {
         mSelectedCameraMode = Integer.parseInt(cameraMode, 16);
         if (mSelectedCameraMode == 0xffff) {
             stopVideoStreaming();
@@ -69,7 +69,7 @@ public class EyePreview extends RosCameraPreviewView {
 //        mHandler.sendMessage(message);
     }
 
-    public void stopVideoStreaming() {
+    void stopVideoStreaming() {
         releaseCamera();
 
 //        Message message = new Message();

@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.robotmitya.robo_common.Constants;
 import com.robotmitya.robo_common.RoboHelper;
 import com.robotmitya.robo_common.SettingsCommon;
 
@@ -37,6 +38,7 @@ public class MainActivity extends RosActivity {
 
     private SettingsFragment mSettingsFragment;
     private FaceFragment mFaceFragment;
+    private EyePreview mEyePreview;
 
     public enum FragmentType { FACE, SETTINGS }
     public static FragmentType fragmentType;
@@ -70,11 +72,22 @@ public class MainActivity extends RosActivity {
 
         fragmentType = FragmentType.FACE;
         getFragmentManager().beginTransaction().add(R.id.fragment_container, mFaceFragment).commit();
+
+        mEyePreview = (EyePreview) findViewById(R.id.eye_preview);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        final short selectedCamera = (short) SettingsFace.getCameraIndex();
+        if (selectedCamera == Constants.Camera.Front) {
+            mEyePreview.startVideoStreaming(SettingsFace.getFrontCameraMode());
+        } else if (selectedCamera == Constants.Camera.Back) {
+            mEyePreview.startVideoStreaming(SettingsFace.getBackCameraMode());
+        } else {
+            mEyePreview.stopVideoStreaming();
+        }
     }
 
     @Override
@@ -93,6 +106,7 @@ public class MainActivity extends RosActivity {
         nodeConfiguration.setMasterUri(getMasterUri());
 
         nodeMainExecutor.execute(mFaceFragment.getFaceNode(), nodeConfiguration);
+        nodeMainExecutor.execute(mEyePreview, nodeConfiguration);
     }
 
     @Override
