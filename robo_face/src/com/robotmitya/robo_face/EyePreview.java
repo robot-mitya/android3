@@ -1,15 +1,20 @@
 package com.robotmitya.robo_face;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 
 import com.robotmitya.robo_common.Constants;
 
 import org.ros.android.view.camera.RosCameraPreviewView;
 import org.ros.namespace.GraphName;
+import org.ros.node.ConnectedNode;
 import org.ros.node.Node;
 
 import java.util.List;
@@ -18,8 +23,31 @@ import java.util.List;
  *
  * Created by dmitrydzz on 21.04.18.
  */
-public class EyePreview extends RosCameraPreviewView {
+public final class EyePreview extends RosCameraPreviewView {
+    final class Broadcast {
+        final class CameraSettings {
+            static final String IntentName = "com.robotmitya.robo_face.CAMERA_SETTINGS";
+            static final String CameraIndexExtraParamName = "I";
+            static final String CameraModeExtraParamName = "M";
+        }
+    }
+
     private int mSelectedCameraMode;
+
+    private BroadcastReceiver mCameraSettingsBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final int cameraIndex = intent.getIntExtra(
+                    Broadcast.CameraSettings.CameraIndexExtraParamName, 0);
+            if (cameraIndex == Constants.Camera.Disabled) {
+                stopVideoStreaming();
+            } else {
+                final String cameraMode = intent.getStringExtra(
+                        Broadcast.CameraSettings.CameraModeExtraParamName);
+                startVideoStreaming(cameraMode);
+            }
+        }
+    };
 
     public EyePreview(Context context) {
         super(context);
@@ -39,9 +67,18 @@ public class EyePreview extends RosCameraPreviewView {
     }
 
     @Override
+    public void onStart(ConnectedNode connectedNode) {
+        super.onStart(connectedNode);
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(
+                mCameraSettingsBroadcastReceiver, new IntentFilter(Broadcast.CameraSettings.IntentName));
+    }
+
+    @Override
     public void onShutdown(Node node) {
         super.onShutdown(node);
         stopVideoStreaming();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mCameraSettingsBroadcastReceiver);
     }
 
     void startVideoStreaming(final String cameraMode) {
