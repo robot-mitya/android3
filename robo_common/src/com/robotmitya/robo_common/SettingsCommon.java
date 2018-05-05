@@ -10,11 +10,15 @@ import android.preference.PreferenceManager;
  */
 public class SettingsCommon {
 
+    private static String mLocalIp;
     private static String mMasterUri;
 
     public static void load(final Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
+        mLocalIp = settings.getString(
+                context.getResources().getString(R.string.option_local_ip_key),
+                RoboHelper.wifiIpAddress(context));
         mMasterUri = settings.getString(
                 context.getResources().getString(R.string.option_master_uri_key),
                 context.getResources().getString(R.string.option_master_uri_default_value));
@@ -24,8 +28,17 @@ public class SettingsCommon {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
         final SharedPreferences.Editor editor = settings.edit();
+        editor.putString(context.getResources().getString(R.string.option_local_ip_key), mLocalIp);
         editor.putString(context.getResources().getString(R.string.option_master_uri_key), mMasterUri);
         editor.apply();
+    }
+
+    public static String getLocalIp() {
+        return mLocalIp;
+    }
+
+    public static  void setLocalIp(final String localIp) {
+        mLocalIp = localIp;
     }
 
     public static String getMasterUri() {

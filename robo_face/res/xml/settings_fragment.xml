@@ -10,6 +10,13 @@
         android:title="@string/preference_ros_core">
 
         <EditTextPreference
+            android:key="@string/option_local_ip_key"
+            android:title="@string/option_local_ip_title"
+            android:summary="@string/option_local_ip_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditTextPreference
             android:key="@string/option_master_uri_key"
             android:title="@string/option_master_uri_title"
             android:summary="@string/option_master_uri_summary"

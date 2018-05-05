@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.robotmitya.robo_common.Constants;
+import com.robotmitya.robo_common.RoboHelper;
 import com.robotmitya.robo_common.SettingsCommon;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private View mView;
 
+    private EditTextPreference mEditTextPreferenceLocalIp;
     private EditTextPreference mEditTextPreferenceMasterUri;
     private ListPreference mListPreferenceCamera;
     private ListPreference mListPreferenceFrontCameraMode;
@@ -41,6 +43,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         final Context context = getActivity();
         String key;
         String title;
+
+        key = getString(R.string.option_local_ip_key);
+        mEditTextPreferenceLocalIp = (EditTextPreference) findPreference(key);
+        title = getString(R.string.option_local_ip_title) + ": " + SettingsCommon.getLocalIp();
+        mEditTextPreferenceLocalIp.setTitle(title);
+        mEditTextPreferenceLocalIp.setDefaultValue(RoboHelper.wifiIpAddress(context));
+        mEditTextPreferenceLocalIp.setOnPreferenceChangeListener(this);
 
         key = getString(R.string.option_master_uri_key);
         mEditTextPreferenceMasterUri = (EditTextPreference) findPreference(key);
@@ -116,7 +125,15 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         boolean hasChanges = false;
         boolean cameraParamsWereChanged = false;
-        if (preference == mEditTextPreferenceMasterUri) {
+        if (preference == mEditTextPreferenceLocalIp) {
+            if (!((String) newValue).contentEquals(SettingsCommon.getLocalIp())) {
+                Toast.makeText(context, getString(R.string.messageRestartApp), Toast.LENGTH_LONG).show();
+            }
+            SettingsCommon.setLocalIp((String) newValue);
+            mEditTextPreferenceLocalIp.setTitle(
+                    getString(R.string.option_local_ip_title) + ": " + newValue);
+            hasChanges = true;
+        } else if (preference == mEditTextPreferenceMasterUri) {
             if (!((String) newValue).contentEquals(SettingsCommon.getMasterUri())) {
                 Toast.makeText(context, getString(R.string.messageRestartApp), Toast.LENGTH_LONG).show();
             }

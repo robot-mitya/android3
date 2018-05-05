@@ -97,10 +97,12 @@ public class MainActivity extends RosActivity {
 
     @Override
     protected void init(NodeMainExecutor nodeMainExecutor) {
-// getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
+// 1. getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
 //        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
 //                InetAddressFactory.newNonLoopback().getHostAddress());
-        String ipAddress = RoboHelper.wifiIpAddress(this);
+// 2. RoboHelper.wifiIpAddress() тоже не работает. При использовании VPN возвращает не тот адрес.
+//    Пришлось делать опцию.
+        String ipAddress = SettingsCommon.getLocalIp();
         Log.i(TAG, "IP address: " + ipAddress);
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());

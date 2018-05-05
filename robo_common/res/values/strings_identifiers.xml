@@ -3,6 +3,8 @@
 
     <string name="preference_ros_core_key">preference_ros_core</string>
 
+    <string name="option_local_ip_key">option_local_ip</string>
+
     <string name="option_master_uri_key">option_master_uri</string>
     <string name="option_master_uri_default_value">http://localhost:11311</string>
 
