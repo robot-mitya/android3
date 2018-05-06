@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="board_background_color">#80333333</color>
+
     <color name="velocity_joystick_disabled_background">#BEBEBE</color>
     <color name="velocity_joystick_enabled_background">#FFC107</color>
     <color name="velocity_joystick_zero_enabled_line">#FF5722</color>
