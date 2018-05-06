@@ -19,14 +19,9 @@ package com.robotmitya.robo_controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
-import com.robotmitya.robo_common.RoboHelper;
+import junit.framework.Assert;
 
 import org.ros.android.RosActivity;
 import org.ros.node.NodeConfiguration;
@@ -39,13 +34,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
-    private ControllerNode mControllerNode;
-    private Orientation mOrientation;
-    private boolean mSendingOrientation = false;
-
-    private CheckBox mCheckBoxSendOrientation;
-    private VelocityJoystick mVelocityJoystick;
-    private TextView mTextOutput;
+    private ControllerFragment mControllerFragment;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -58,90 +47,28 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mTextOutput = (TextView) findViewById(R.id.textOutput);
+        if (findViewById(R.id.fragment_container) == null)
+            return;
 
-        mControllerNode = new ControllerNode();
+        if (savedInstanceState != null)
+            return;
 
-        mOrientation = new Orientation(this);
-        mOrientation.setOnOrientationListener(new Orientation.OnOrientationListener() {
-            public void onOrientation(long timestamp, float x, float y, float z, float w) {
-                if (mSendingOrientation)
-                    mControllerNode.sendOrientation(timestamp, x, y, z, w);
-            }
-        });
+        mControllerFragment = new ControllerFragment();
 
-        Button buttonLed1 = (Button) findViewById(R.id.buttonLed1);
-        buttonLed1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed1();
-                Log.d(TAG, "LED 1 press");
-            }
-        });
-
-        Button buttonLed2 = (Button) findViewById(R.id.buttonLed2);
-        buttonLed2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed2();
-                Log.d(TAG, "LED 2 press");
-            }
-        });
-
-        mCheckBoxSendOrientation = (CheckBox) findViewById(R.id.checkboxSendOrientation);
-        mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mControllerNode.setPointingMode(isChecked);
-                mSendingOrientation = isChecked;
-                mVelocityJoystick.setEnabled(isChecked);
-                if (isChecked) {
-                    mOrientation.center();
-                    mControllerNode.centerHead();
-                }
-            }
-        });
-
-        mVelocityJoystick = (VelocityJoystick) findViewById(R.id.velocityJoystick);
-        mVelocityJoystick.setEnabled(false);
-        mVelocityJoystick.setOnChangeVelocityListener(new VelocityJoystick.OnChangeVelocityListener() {
-            @Override
-            public void onChangeVelocity(byte velocity) {
-                Log.d(TAG, "Velocity = " + velocity);
-                mControllerNode.sendDriveTowards(velocity);
-            }
-        });
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(20);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String text1 = mCheckBoxSendOrientation.isChecked() ?
-                                        mOrientation.getFrameSensorText() : "";
-                                mTextOutput.setText(text1);
-                            }
-                        });
-                    }
-                } catch (InterruptedException ignored) {
-                }
-            }
-        }.start();
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, mControllerFragment).commit();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mOrientation.start();
+        Assert.assertNotNull(mControllerFragment.getOrientation());
+        mControllerFragment.getOrientation().start();
     }
 
     @Override
     protected void onStop() {
-        mOrientation.stop();
+        Assert.assertNotNull(mControllerFragment.getOrientation());
+        mControllerFragment.getOrientation().stop();
         super.onStop();
     }
 
@@ -150,19 +77,22 @@ public class MainActivity extends RosActivity {
 // getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
 //        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
 //                InetAddressFactory.newNonLoopback().getHostAddress());
-        String ipAddress = RoboHelper.wifiIpAddress(this);
+//        String ipAddress = RoboHelper.wifiIpAddress(this);
+        String ipAddress = "10.8.0.4"; //todo: Read ROS_IP from settings
         Log.i(TAG, "IP address: " + ipAddress);
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
 
-        nodeMainExecutor.execute(mControllerNode, nodeConfiguration);
+        Assert.assertNotNull(mControllerFragment.getControllerNode());
+        nodeMainExecutor.execute(mControllerFragment.getControllerNode(), nodeConfiguration);
     }
 
     @Override
     public void startMasterChooser() {
         Intent data = new Intent();
         //Log.d(this, "++++++++++++ ROS_MASTER_URI=" + SettingsFragment.getMasterUri());
-        data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
+        //data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
+        data.putExtra("ROS_MASTER_URI", "http://10.8.0.2:11311"); //todo: Read ROS_MASTER_URI from settings
         data.putExtra("NEW_MASTER", false);
         data.putExtra("ROS_MASTER_PRIVATE", false);
         onActivityResult(0, RESULT_OK, data);

@@ -1,78 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <org.ros.android.view.RosImageView
-        android:id="@+id/imageViewVideo"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/board_background_color" />
-
-    <LinearLayout
-        android:id="@+id/ledButtons"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/buttonLed1"
-            style="?buttonBarButtonStyle"
-            android:layout_gravity="start|center_vertical"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/ui_switch_led_1"
-            android:text=""
-            android:padding="10dp"
-            android:background="@android:color/darker_gray"
-            android:gravity="center" />
-
-        <Button
-            android:id="@+id/buttonLed2"
-            style="?buttonBarButtonStyle"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="20dp"
-            android:hint="@string/ui_switch_led_2"
-            android:padding="10dp"
-            android:background="@android:color/darker_gray"
-            android:gravity="center" />
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/checkboxSendOrientation"
-        android:layout_below="@id/ledButtons"
-        android:checked="false"
-        android:layout_marginTop="10dp"
-        android:text="@string/ui_send_orientation"
-        android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.robotmitya.robo_controller.VelocityJoystick
-        android:id="@+id/velocityJoystick"
-        android:layout_alignParentEnd="true"
-        android:background="@color/velocity_joystick_enabled_background"
-        android:layout_height="match_parent"
-        android:layout_width="20dp" />
-
-    <TextView
-        android:id="@+id/textOutput"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible"
-        android:background="@android:color/darker_gray"
-        android:foreground="@android:color/white"
-        android:fontFamily="monospace"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
