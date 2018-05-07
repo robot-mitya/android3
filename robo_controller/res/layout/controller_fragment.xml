@@ -6,6 +6,7 @@
 
     <org.ros.android.view.RosImageView
         android:id="@+id/imageViewVideo"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/board_background_color" />
@@ -14,7 +15,7 @@
         android:id="@+id/ledButtons"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,13 +24,11 @@
             android:id="@+id/buttonLed1"
             style="?buttonBarButtonStyle"
             android:layout_gravity="start|center_vertical"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
             android:hint="@string/ui_switch_led_1"
-            android:text=""
-            android:padding="10dp"
+            android:text="1"
             android:background="@android:color/darker_gray"
             android:gravity="center" />
 
@@ -37,12 +36,11 @@
             android:id="@+id/buttonLed2"
             style="?buttonBarButtonStyle"
             android:layout_gravity="end|center_vertical"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
             android:hint="@string/ui_switch_led_2"
-            android:padding="10dp"
+            android:text="2"
             android:background="@android:color/darker_gray"
             android:gravity="center" />
     </LinearLayout>
@@ -52,8 +50,8 @@
         android:layout_below="@id/ledButtons"
         android:checked="false"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
         android:text="@string/ui_send_orientation"
-        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -61,8 +59,11 @@
         android:id="@+id/velocityJoystick"
         android:layout_alignParentEnd="true"
         android:background="@color/velocity_joystick_enabled_background"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="60dp"
         android:layout_height="match_parent"
-        android:layout_width="20dp" />
+        android:layout_width="40dp" />
 
     <TextView
         android:id="@+id/textOutput"

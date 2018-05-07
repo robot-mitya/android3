@@ -20,6 +20,7 @@ public class Constants {
         public static final String DriveTowards = "robot_mitya/drive_towards";
         public static final String ControllerImu = "robot_mitya/controller_imu";
         public static final String Face = "robot_mitya/face";
+        public static final String Camera = "/camera/image/compressed";
     }
 
     public final class Camera {

@@ -13,6 +13,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.robotmitya.robo_common.Constants;
+
+import org.ros.android.BitmapFromCompressedImage;
+import org.ros.android.view.RosImageView;
+
+import sensor_msgs.CompressedImage;
+
 import static com.robotmitya.robo_common.Constants.TAG;
 
 /**
@@ -26,11 +33,16 @@ public class ControllerFragment extends Fragment {
     private Orientation mOrientation;
     private boolean mSendingOrientation = false;
 
+    private RosImageView<CompressedImage> mVideoView;
     private CheckBox mCheckBoxSendOrientation;
     private VelocityJoystick mVelocityJoystick;
     private TextView mTextOutput;
 
     public ControllerFragment() {
+    }
+
+    public RosImageView<CompressedImage> getVideoView() {
+        return mVideoView;
     }
 
     public Orientation getOrientation() {
@@ -48,6 +60,12 @@ public class ControllerFragment extends Fragment {
             return null;
 
         final Context context = getActivity();
+
+        //noinspection unchecked
+        mVideoView = (RosImageView<CompressedImage>) result.findViewById(R.id.imageViewVideo);
+        mVideoView.setTopicName(Constants.TopicName.Camera);
+        mVideoView.setMessageType(sensor_msgs.CompressedImage._TYPE);
+        mVideoView.setMessageToBitmapCallable(new BitmapFromCompressedImage());
 
         mTextOutput = (TextView) result.findViewById(R.id.textOutput);
 
@@ -131,4 +149,14 @@ public class ControllerFragment extends Fragment {
         return result;
     }
 
+    public void setFullscreen() {
+        if (mVideoView != null)
+            mVideoView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
 }

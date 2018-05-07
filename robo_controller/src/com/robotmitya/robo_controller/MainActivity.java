@@ -83,6 +83,9 @@ public class MainActivity extends RosActivity {
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
 
+        Assert.assertNotNull(mControllerFragment.getVideoView());
+        nodeMainExecutor.execute(mControllerFragment.getVideoView(), nodeConfiguration);
+
         Assert.assertNotNull(mControllerFragment.getControllerNode());
         nodeMainExecutor.execute(mControllerFragment.getControllerNode(), nodeConfiguration);
     }
@@ -96,5 +99,17 @@ public class MainActivity extends RosActivity {
         data.putExtra("NEW_MASTER", false);
         data.putExtra("ROS_MASTER_PRIVATE", false);
         onActivityResult(0, RESULT_OK, data);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            mControllerFragment.setFullscreen();
+//            if (fragmentType == FragmentType.FACE)
+//                mFaceFragment.setFullscreen();
+//            else if (fragmentType == FragmentType.SETTINGS)
+//                mSettingsFragment.setSettingsFullscreen();
+        }
     }
 }
