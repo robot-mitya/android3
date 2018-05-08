@@ -76,4 +76,14 @@
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_settings"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/imageViewVideo"
+        android:layout_alignStart="@+id/imageViewVideo"
+        android:contentDescription="@string/settingsImageDescription" />
+
 </RelativeLayout>

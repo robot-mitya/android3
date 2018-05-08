@@ -2,6 +2,7 @@ package com.robotmitya.robo_controller;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.robotmitya.robo_common.Constants;
@@ -28,7 +30,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 
 public class ControllerFragment extends Fragment {
-
+    private SettingsFragment mSettingsFragment;
     private ControllerNode mControllerNode;
     private Orientation mOrientation;
     private boolean mSendingOrientation = false;
@@ -39,6 +41,10 @@ public class ControllerFragment extends Fragment {
     private TextView mTextOutput;
 
     public ControllerFragment() {
+    }
+
+    public void setSettingsFragment(final SettingsFragment settingsFragment) {
+        mSettingsFragment = settingsFragment;
     }
 
     public RosImageView<CompressedImage> getVideoView() {
@@ -121,6 +127,19 @@ public class ControllerFragment extends Fragment {
             }
         });
 
+        ImageButton imageButton = (ImageButton) result.findViewById(R.id.settingsButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSettingsFragment != null) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, mSettingsFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }
+        });
+
         new Thread() {
             @Override
             public void run() {
@@ -144,7 +163,7 @@ public class ControllerFragment extends Fragment {
             }
         }.start();
 
-//        setControllerFullscreen();
+        setFullscreen();
 
         return result;
     }

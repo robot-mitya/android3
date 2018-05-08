@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.robotmitya.robo_common.SettingsCommon;
+
 import junit.framework.Assert;
 
 import org.ros.android.RosActivity;
@@ -34,7 +36,11 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
+    private SettingsFragment mSettingsFragment;
     private ControllerFragment mControllerFragment;
+
+    public enum FragmentType { CONTROLLER, SETTINGS }
+    public static FragmentType fragmentType;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -47,14 +53,19 @@ public class MainActivity extends RosActivity {
         setContentView(R.layout.main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        SettingsCommon.load(this);
+
         if (findViewById(R.id.fragment_container) == null)
             return;
 
         if (savedInstanceState != null)
             return;
 
+        mSettingsFragment = new SettingsFragment();
         mControllerFragment = new ControllerFragment();
+        mControllerFragment.setSettingsFragment(mSettingsFragment);
 
+        fragmentType = FragmentType.CONTROLLER;
         getFragmentManager().beginTransaction().add(R.id.fragment_container, mControllerFragment).commit();
     }
 
@@ -74,12 +85,14 @@ public class MainActivity extends RosActivity {
 
     @Override
     protected void init(NodeMainExecutor nodeMainExecutor) {
-// getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
+// 1. getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
 //        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
 //                InetAddressFactory.newNonLoopback().getHostAddress());
-//        String ipAddress = RoboHelper.wifiIpAddress(this);
-        String ipAddress = "10.8.0.4"; //todo: Read ROS_IP from settings
-        Log.i(TAG, "IP address: " + ipAddress);
+// 2. RoboHelper.wifiIpAddress() тоже не работает. При использовании VPN возвращает не тот адрес.
+//    Пришлось делать опцию.
+        //String ipAddress = "10.8.0.4";
+        String ipAddress = SettingsCommon.getLocalIp();
+        Log.i(TAG, "Environment variable ROS_IP=" + ipAddress);
         NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
         nodeConfiguration.setMasterUri(getMasterUri());
 
@@ -93,9 +106,11 @@ public class MainActivity extends RosActivity {
     @Override
     public void startMasterChooser() {
         Intent data = new Intent();
-        //Log.d(this, "++++++++++++ ROS_MASTER_URI=" + SettingsFragment.getMasterUri());
         //data.putExtra("ROS_MASTER_URI", "http://192.168.100.3:11311");
-        data.putExtra("ROS_MASTER_URI", "http://10.8.0.2:11311"); //todo: Read ROS_MASTER_URI from settings
+        //data.putExtra("ROS_MASTER_URI", "http://10.8.0.2:11311");
+        final String masterURI = SettingsCommon.getMasterUri();
+        Log.i(TAG, "Environment variable ROS_MASTER_URI=" + masterURI);
+        data.putExtra("ROS_MASTER_URI", masterURI);
         data.putExtra("NEW_MASTER", false);
         data.putExtra("ROS_MASTER_PRIVATE", false);
         onActivityResult(0, RESULT_OK, data);
@@ -105,11 +120,10 @@ public class MainActivity extends RosActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            mControllerFragment.setFullscreen();
-//            if (fragmentType == FragmentType.FACE)
-//                mFaceFragment.setFullscreen();
-//            else if (fragmentType == FragmentType.SETTINGS)
-//                mSettingsFragment.setSettingsFullscreen();
+            if (fragmentType == FragmentType.CONTROLLER)
+                mControllerFragment.setFullscreen();
+            else if (fragmentType == FragmentType.SETTINGS)
+                mSettingsFragment.setSettingsFullscreen();
         }
     }
 }

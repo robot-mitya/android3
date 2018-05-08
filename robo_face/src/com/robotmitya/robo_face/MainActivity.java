@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.robotmitya.robo_common.Constants;
-import com.robotmitya.robo_common.RoboHelper;
 import com.robotmitya.robo_common.SettingsCommon;
 
 import org.ros.android.RosActivity;
