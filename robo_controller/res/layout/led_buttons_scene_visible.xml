@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/buttonLed1"
+        style="?buttonBarButtonStyle"
+        android:background="@drawable/button_states"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="120dp"
+        android:hint="@string/ui_switch_led_1"
+        android:text="1"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/buttonLed2"
+        style="?buttonBarButtonStyle"
+        android:background="@drawable/button_states"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="180dp"
+        android:hint="@string/ui_switch_led_2"
+        android:text="2"
+        android:visibility="visible" />
+
+</RelativeLayout>

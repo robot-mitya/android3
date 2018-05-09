@@ -5,10 +5,22 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
+import android.transition.Visibility;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -78,6 +90,8 @@ public class ControllerFragment extends Fragment {
         mOnStopFragmentListener = onStopFragmentListener;
     }
 
+    private boolean mLedsVisible = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.controller_fragment, container, false);
@@ -104,7 +118,32 @@ public class ControllerFragment extends Fragment {
             }
         });
 
-        Button buttonLed1 = (Button) result.findViewById(R.id.buttonLed1);
+        final ViewGroup ledsGroup = (ViewGroup) result.findViewById(R.id.scene_buttonLeds_container);
+        final Scene sceneButtonLedsVisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_visible, context);
+        final Scene sceneButtonLedsInvisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_invisible, context);
+        final TransitionSet set = new TransitionSet();
+        set.addTransition(new ChangeBounds());
+        set.setInterpolator(new AccelerateInterpolator());
+        set.setDuration(150);
+        final TransitionManager transitionManager = new TransitionManager();
+        transitionManager.setTransition(sceneButtonLedsVisible, sceneButtonLedsInvisible, set);
+        transitionManager.setTransition(sceneButtonLedsInvisible, sceneButtonLedsVisible, set);
+        transitionManager.transitionTo(sceneButtonLedsInvisible);
+
+        final Button buttonLeds = (Button) result.findViewById(R.id.buttonLeds);
+        buttonLeds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLedsVisible) {
+                    transitionManager.transitionTo(sceneButtonLedsInvisible);
+                } else {
+                    transitionManager.transitionTo(sceneButtonLedsVisible);
+                }
+                mLedsVisible = !mLedsVisible;
+            }
+        });
+
+        final Button buttonLed1 = (Button) result.findViewById(R.id.buttonLed1);
         buttonLed1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

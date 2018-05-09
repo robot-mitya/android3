@@ -12,38 +12,109 @@
         android:background="@color/board_background_color" />
 
     <LinearLayout
-        android:id="@+id/ledButtons"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/faceButtons"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/buttonLed1"
+            android:id="@+id/buttonFace"
             style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
             android:layout_gravity="start|center_vertical"
-            android:layout_width="40dp"
+            android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
-            android:hint="@string/ui_switch_led_1"
-            android:text="1"
-            android:background="@android:color/darker_gray"
+            android:textAllCaps="false"
+            android:text="Face"
             android:gravity="center" />
 
         <Button
-            android:id="@+id/buttonLed2"
+            android:id="@+id/buttonFaceOk"
             style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
             android:layout_gravity="end|center_vertical"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
-            android:hint="@string/ui_switch_led_2"
-            android:text="2"
-            android:background="@android:color/darker_gray"
+            android:text=""
+
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonFaceHappy"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:text=""
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonFaceBlue"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:text=""
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonFaceAngry"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:text=""
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonFaceIll"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:text=""
             android:gravity="center" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ledButtons"
+        android:orientation="horizontal"
+        android:layout_below="@id/faceButtons"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/buttonLeds"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:textAllCaps="false"
+            android:text="LEDs" />
+
+        <FrameLayout
+            android:id="@+id/scene_buttonLeds_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/led_buttons_scene_invisible"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
 
     <CheckBox
         android:id="@+id/checkboxSendOrientation"
