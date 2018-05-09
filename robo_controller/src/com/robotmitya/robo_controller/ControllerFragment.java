@@ -59,6 +59,25 @@ public class ControllerFragment extends Fragment {
         return mControllerNode;
     }
 
+    public interface OnStartFragmentListener {
+        void OnStartFragment();
+    }
+
+    public interface OnStopFragmentListener {
+        void OnStopFragment();
+    }
+
+    private OnStartFragmentListener mOnStartFragmentListener;
+    private OnStopFragmentListener mOnStopFragmentListener;
+
+    public void setOnStartFragmentListener(OnStartFragmentListener onStartFragmentListener) {
+        mOnStartFragmentListener = onStartFragmentListener;
+    }
+
+    public void setOnStopFragmentListener(OnStopFragmentListener onStopFragmentListener) {
+        mOnStopFragmentListener = onStopFragmentListener;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.controller_fragment, container, false);
@@ -166,6 +185,20 @@ public class ControllerFragment extends Fragment {
         setFullscreen();
 
         return result;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mOnStartFragmentListener != null)
+            mOnStartFragmentListener.OnStartFragment();
+    }
+
+    @Override
+    public void onStop() {
+        if (mOnStopFragmentListener != null)
+            mOnStopFragmentListener.OnStopFragment();
+        super.onStop();
     }
 
     public void setFullscreen() {

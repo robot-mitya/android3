@@ -29,6 +29,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         mView = null;
     }
 
+    public interface OnStartFragmentListener {
+        void OnStartFragment();
+    }
+
+    public interface OnStopFragmentListener {
+        void OnStopFragment();
+    }
+
+    private OnStartFragmentListener mOnStartFragmentListener;
+    private OnStopFragmentListener mOnStopFragmentListener;
+
+    public void setOnStartFragmentListener(OnStartFragmentListener onStartFragmentListener) {
+        mOnStartFragmentListener = onStartFragmentListener;
+    }
+
+    public void setOnStopFragmentListener(OnStopFragmentListener onStopFragmentListener) {
+        mOnStopFragmentListener = onStopFragmentListener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +76,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = super.onCreateView(inflater, container, savedInstanceState);
         setSettingsFullscreen();
-        MainActivity.fragmentType = MainActivity.FragmentType.SETTINGS;
         return mView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mOnStartFragmentListener != null)
+            mOnStartFragmentListener.OnStartFragment();
+    }
+
+    @Override
+    public void onStop() {
+        if (mOnStopFragmentListener != null)
+            mOnStopFragmentListener.OnStopFragment();
+        super.onStop();
     }
 
     @Override

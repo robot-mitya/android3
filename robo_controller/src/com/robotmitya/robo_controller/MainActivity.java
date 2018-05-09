@@ -36,11 +36,15 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 public class MainActivity extends RosActivity {
 
+    private volatile NodeConfiguration mNodeConfiguration = null;
+    private volatile NodeMainExecutor mNodeMainExecutor = null;
+    private boolean mNodesStarted = false;
+
     private SettingsFragment mSettingsFragment;
     private ControllerFragment mControllerFragment;
 
-    public enum FragmentType { CONTROLLER, SETTINGS }
-    public static FragmentType fragmentType;
+    private enum FragmentType { CONTROLLER, SETTINGS }
+    private FragmentType mFragmentType;
 
     public MainActivity() {
         super("RoboController", "RoboController");
@@ -62,10 +66,35 @@ public class MainActivity extends RosActivity {
             return;
 
         mSettingsFragment = new SettingsFragment();
+        mSettingsFragment.setOnStartFragmentListener(new SettingsFragment.OnStartFragmentListener() {
+            @Override
+            public void OnStartFragment() {
+                mFragmentType = FragmentType.SETTINGS;
+            }
+        });
+        mSettingsFragment.setOnStopFragmentListener(new SettingsFragment.OnStopFragmentListener() {
+            @Override
+            public void OnStopFragment() {
+            }
+        });
+
         mControllerFragment = new ControllerFragment();
         mControllerFragment.setSettingsFragment(mSettingsFragment);
+        mControllerFragment.setOnStartFragmentListener(new ControllerFragment.OnStartFragmentListener() {
+            @Override
+            public void OnStartFragment() {
+                mFragmentType = FragmentType.CONTROLLER;
+                startNodes();
+            }
+        });
+        mControllerFragment.setOnStopFragmentListener(new ControllerFragment.OnStopFragmentListener() {
+            @Override
+            public void OnStopFragment() {
+                stopNodes();
+            }
+        });
 
-        fragmentType = FragmentType.CONTROLLER;
+        mFragmentType = FragmentType.CONTROLLER;
         getFragmentManager().beginTransaction().add(R.id.fragment_container, mControllerFragment).commit();
     }
 
@@ -86,21 +115,41 @@ public class MainActivity extends RosActivity {
     @Override
     protected void init(NodeMainExecutor nodeMainExecutor) {
 // 1. getHostAddress() не работает. Функция возвращает первый попавшийся IP4 - или WIFI- или GSM-адрес.
-//        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(
+//        NodeConfiguration mNodeConfiguration = NodeConfiguration.newPublic(
 //                InetAddressFactory.newNonLoopback().getHostAddress());
 // 2. RoboHelper.wifiIpAddress() тоже не работает. При использовании VPN возвращает не тот адрес.
 //    Пришлось делать опцию.
         //String ipAddress = "10.8.0.4";
         String ipAddress = SettingsCommon.getLocalIp();
         Log.i(TAG, "Environment variable ROS_IP=" + ipAddress);
-        NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(ipAddress);
-        nodeConfiguration.setMasterUri(getMasterUri());
+        mNodeConfiguration = NodeConfiguration.newPublic(ipAddress);
+        mNodeConfiguration.setMasterUri(getMasterUri());
+
+        mNodeMainExecutor = nodeMainExecutor;
+        startNodes();
+    }
+
+    private void startNodes() {
+        if (mNodesStarted || mNodeMainExecutor == null || mNodeConfiguration == null) return;
+        Log.d(TAG, "Starting nodes");
 
         Assert.assertNotNull(mControllerFragment.getVideoView());
-        nodeMainExecutor.execute(mControllerFragment.getVideoView(), nodeConfiguration);
+        mNodeMainExecutor.execute(mControllerFragment.getVideoView(), mNodeConfiguration);
 
         Assert.assertNotNull(mControllerFragment.getControllerNode());
-        nodeMainExecutor.execute(mControllerFragment.getControllerNode(), nodeConfiguration);
+        mNodeMainExecutor.execute(mControllerFragment.getControllerNode(), mNodeConfiguration);
+
+        mNodesStarted = true;
+    }
+
+    private void stopNodes() {
+        if (!mNodesStarted || mNodeMainExecutor == null || mNodeConfiguration == null) return;
+        Log.d(TAG, "Stopping nodes");
+
+        mNodeMainExecutor.shutdownNodeMain(mControllerFragment.getVideoView());
+        mNodeMainExecutor.shutdownNodeMain(mControllerFragment.getControllerNode());
+
+        mNodesStarted = false;
     }
 
     @Override
@@ -120,10 +169,11 @@ public class MainActivity extends RosActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            if (fragmentType == FragmentType.CONTROLLER)
+            if (mFragmentType == FragmentType.CONTROLLER) {
                 mControllerFragment.setFullscreen();
-            else if (fragmentType == FragmentType.SETTINGS)
+            } else if (mFragmentType == FragmentType.SETTINGS) {
                 mSettingsFragment.setSettingsFullscreen();
+            }
         }
     }
 }
