@@ -95,16 +95,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/buttonLeds"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:textAllCaps="false"
-            android:text="LEDs" />
-
         <FrameLayout
             android:id="@+id/scene_buttonLeds_container"
             android:layout_width="match_parent"
@@ -113,6 +103,17 @@
             <include layout="@layout/led_buttons_scene_invisible"/>
 
         </FrameLayout>
+
+        <Button
+            android:id="@+id/buttonLeds"
+            style="?buttonBarButtonStyle"
+            android:background="@drawable/button_states"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:textAllCaps="false"
+            android:text="@string/ui_leds_button">
+        </Button>
 
     </RelativeLayout>
 
