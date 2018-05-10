@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonLed1"
         style="?buttonBarButtonStyle"
         android:background="@drawable/button_states"
@@ -12,10 +12,11 @@
         android:layout_height="40dp"
         android:layout_marginStart="120dp"
         android:hint="@string/ui_switch_led_1"
+        android:src="@drawable/ic_settings"
         android:text="1"
         android:visibility="visible" />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonLed2"
         style="?buttonBarButtonStyle"
         android:background="@drawable/button_states"
@@ -23,6 +24,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="180dp"
         android:hint="@string/ui_switch_led_2"
+        android:src="@drawable/ic_settings"
         android:text="2"
         android:visibility="visible" />
 

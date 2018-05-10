@@ -6,21 +6,14 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
-import android.transition.Fade;
 import android.transition.Scene;
-import android.transition.Slide;
-import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
-import android.transition.Visibility;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -92,9 +85,31 @@ public class ControllerFragment extends Fragment {
 
     private boolean mLedsVisible = false;
 
+    private View.OnClickListener mButtonClickListenerLeds = null;
+
+    private View.OnClickListener mButtonClickListenerLed1 = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "LED 1 press");
+            mControllerNode.switchLed1();
+            if (mButtonClickListenerLeds != null)
+                mButtonClickListenerLeds.onClick(v);
+        }
+    };
+
+    private View.OnClickListener mButtonClickListenerLed2 = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "LED 2 press");
+            mControllerNode.switchLed2();
+            if (mButtonClickListenerLeds != null)
+                mButtonClickListenerLeds.onClick(v);
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View result = inflater.inflate(R.layout.controller_fragment, container, false);
+        final View result = inflater.inflate(R.layout.controller_fragment, container, false);
         if (result == null)
             return null;
 
@@ -118,48 +133,39 @@ public class ControllerFragment extends Fragment {
             }
         });
 
+//--------------------------------------------------------------------------------------------------
         final ViewGroup ledsGroup = (ViewGroup) result.findViewById(R.id.scene_buttonLeds_container);
         final Scene sceneButtonLedsVisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_visible, context);
         final Scene sceneButtonLedsInvisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_invisible, context);
-        final TransitionSet set = new TransitionSet();
-        set.addTransition(new ChangeBounds());
-        set.setInterpolator(new AccelerateInterpolator());
-        set.setDuration(150);
-        final TransitionManager transitionManager = new TransitionManager();
-        transitionManager.setTransition(sceneButtonLedsVisible, sceneButtonLedsInvisible, set);
-        transitionManager.setTransition(sceneButtonLedsInvisible, sceneButtonLedsVisible, set);
-        transitionManager.transitionTo(sceneButtonLedsInvisible);
+        final TransitionSet transitionSetLeds = new TransitionSet();
+        transitionSetLeds.addTransition(new ChangeBounds());
+        transitionSetLeds.setInterpolator(new AccelerateInterpolator());
+        transitionSetLeds.setDuration(150);
+        final TransitionManager transitionManagerLeds = new TransitionManager();
+        transitionManagerLeds.setTransition(sceneButtonLedsVisible, sceneButtonLedsInvisible, transitionSetLeds);
+        transitionManagerLeds.setTransition(sceneButtonLedsInvisible, sceneButtonLedsVisible, transitionSetLeds);
+        transitionManagerLeds.transitionTo(sceneButtonLedsInvisible);
 
         final Button buttonLeds = (Button) result.findViewById(R.id.buttonLeds);
-        buttonLeds.setOnClickListener(new View.OnClickListener() {
+        mButtonClickListenerLeds = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLedsVisible) {
-                    transitionManager.transitionTo(sceneButtonLedsInvisible);
+                    transitionManagerLeds.transitionTo(sceneButtonLedsInvisible);
                 } else {
-                    transitionManager.transitionTo(sceneButtonLedsVisible);
+                    transitionManagerLeds.transitionTo(sceneButtonLedsVisible);
+
+                    final ImageButton buttonLed1 = (ImageButton) result.findViewById(R.id.buttonLed1);
+                    buttonLed1.setOnClickListener(mButtonClickListenerLed1);
+
+                    final ImageButton buttonLed2 = (ImageButton) result.findViewById(R.id.buttonLed2);
+                    buttonLed2.setOnClickListener(mButtonClickListenerLed2);
                 }
                 mLedsVisible = !mLedsVisible;
             }
-        });
-
-        final Button buttonLed1 = (Button) result.findViewById(R.id.buttonLed1);
-        buttonLed1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed1();
-                Log.d(TAG, "LED 1 press");
-            }
-        });
-
-        Button buttonLed2 = (Button) result.findViewById(R.id.buttonLed2);
-        buttonLed2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mControllerNode.switchLed2();
-                Log.d(TAG, "LED 2 press");
-            }
-        });
+        };
+        buttonLeds.setOnClickListener(mButtonClickListenerLeds);
+//--------------------------------------------------------------------------------------------------
 
         mCheckBoxSendOrientation = (CheckBox) result.findViewById(R.id.checkboxSendOrientation);
         mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
