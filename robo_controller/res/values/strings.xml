@@ -10,4 +10,6 @@
     <string name="ui_switch_led_2">Switch LED 2</string>
     <string name="ui_send_orientation">Send orientation</string>
 
+    <string name="ui_face_button">Face</string>
+
 </resources>

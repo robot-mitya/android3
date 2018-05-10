@@ -131,7 +131,7 @@ public class MainActivity extends RosActivity {
 
     private void startNodes() {
         if (mNodesStarted || mNodeMainExecutor == null || mNodeConfiguration == null) return;
-        Log.d(TAG, "Starting nodes");
+        //Log.d(TAG, "Starting nodes");
 
         Assert.assertNotNull(mControllerFragment.getVideoView());
         mNodeMainExecutor.execute(mControllerFragment.getVideoView(), mNodeConfiguration);
@@ -144,7 +144,7 @@ public class MainActivity extends RosActivity {
 
     private void stopNodes() {
         if (!mNodesStarted || mNodeMainExecutor == null || mNodeConfiguration == null) return;
-        Log.d(TAG, "Stopping nodes");
+        //Log.d(TAG, "Stopping nodes");
 
         mNodeMainExecutor.shutdownNodeMain(mControllerFragment.getVideoView());
         mNodeMainExecutor.shutdownNodeMain(mControllerFragment.getControllerNode());

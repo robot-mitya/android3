@@ -11,87 +11,39 @@
         android:layout_height="match_parent"
         android:background="@color/board_background_color" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/faceButtons"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/scene_buttonFace_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/face_buttons_scene_invisible"/>
+
+        </FrameLayout>
 
         <Button
-            android:id="@+id/buttonFace"
+            android:id="@+id/buttonFaces"
             style="?buttonBarButtonStyle"
             android:background="@drawable/button_states"
-            android:layout_gravity="start|center_vertical"
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
             android:textAllCaps="false"
-            android:text="Face"
-            android:gravity="center" />
+            android:text="@string/ui_face_button">
+        </Button>
 
-        <Button
-            android:id="@+id/buttonFaceOk"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:text=""
-
-            android:gravity="center" />
-
-        <Button
-            android:id="@+id/buttonFaceHappy"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:text=""
-            android:gravity="center" />
-
-        <Button
-            android:id="@+id/buttonFaceBlue"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:text=""
-            android:gravity="center" />
-
-        <Button
-            android:id="@+id/buttonFaceAngry"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:text=""
-            android:gravity="center" />
-
-        <Button
-            android:id="@+id/buttonFaceIll"
-            style="?buttonBarButtonStyle"
-            android:background="@drawable/button_states"
-            android:layout_gravity="end|center_vertical"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:text=""
-            android:gravity="center" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ledButtons"
         android:orientation="horizontal"
-        android:layout_below="@id/faceButtons"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

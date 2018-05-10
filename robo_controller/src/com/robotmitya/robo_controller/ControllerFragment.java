@@ -45,6 +45,74 @@ public class ControllerFragment extends Fragment {
     private VelocityJoystick mVelocityJoystick;
     private TextView mTextOutput;
 
+    //region Face buttons' handlers
+    private boolean mFacesVisible = false;
+    private View.OnClickListener mButtonClickListenerFaces = null;
+    private View.OnClickListener mButtonClickListenerFaceOk = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "FaceOk press");
+            if (mButtonClickListenerFaces != null)
+                mButtonClickListenerFaces.onClick(v);
+        }
+    };
+    private View.OnClickListener mButtonClickListenerFaceHappy = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "FaceHappy press");
+            if (mButtonClickListenerFaces != null)
+                mButtonClickListenerFaces.onClick(v);
+        }
+    };
+    private View.OnClickListener mButtonClickListenerFaceBlue = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "FaceBlue press");
+            if (mButtonClickListenerFaces != null)
+                mButtonClickListenerFaces.onClick(v);
+        }
+    };
+    private View.OnClickListener mButtonClickListenerFaceAngry = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "FaceAngry press");
+            if (mButtonClickListenerFaces != null)
+                mButtonClickListenerFaces.onClick(v);
+        }
+    };
+    private View.OnClickListener mButtonClickListenerFaceIll = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "FaceIll press");
+            if (mButtonClickListenerFaces != null)
+                mButtonClickListenerFaces.onClick(v);
+        }
+    };
+    //endregion
+
+    //region LED buttons' handlers
+    private boolean mLedsVisible = false;
+    private View.OnClickListener mButtonClickListenerLeds = null;
+    private View.OnClickListener mButtonClickListenerLed1 = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "LED 1 press");
+            mControllerNode.switchLed1();
+            if (mButtonClickListenerLeds != null)
+                mButtonClickListenerLeds.onClick(v);
+        }
+    };
+    private View.OnClickListener mButtonClickListenerLed2 = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "LED 2 press");
+            mControllerNode.switchLed2();
+            if (mButtonClickListenerLeds != null)
+                mButtonClickListenerLeds.onClick(v);
+        }
+    };
+    //endregion
+
     public ControllerFragment() {
     }
 
@@ -83,30 +151,6 @@ public class ControllerFragment extends Fragment {
         mOnStopFragmentListener = onStopFragmentListener;
     }
 
-    private boolean mLedsVisible = false;
-
-    private View.OnClickListener mButtonClickListenerLeds = null;
-
-    private View.OnClickListener mButtonClickListenerLed1 = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.d(TAG, "LED 1 press");
-            mControllerNode.switchLed1();
-            if (mButtonClickListenerLeds != null)
-                mButtonClickListenerLeds.onClick(v);
-        }
-    };
-
-    private View.OnClickListener mButtonClickListenerLed2 = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.d(TAG, "LED 2 press");
-            mControllerNode.switchLed2();
-            if (mButtonClickListenerLeds != null)
-                mButtonClickListenerLeds.onClick(v);
-        }
-    };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View result = inflater.inflate(R.layout.controller_fragment, container, false);
@@ -133,14 +177,57 @@ public class ControllerFragment extends Fragment {
             }
         });
 
-//--------------------------------------------------------------------------------------------------
+        //region Face buttons animation
+        final ViewGroup facesGroup = (ViewGroup) result.findViewById(R.id.scene_buttonFace_container);
+        final Scene sceneButtonFacesVisible = Scene.getSceneForLayout(facesGroup, R.layout.face_buttons_scene_visible, context);
+        final Scene sceneButtonFacesInvisible = Scene.getSceneForLayout(facesGroup, R.layout.face_buttons_scene_invisible, context);
+        final TransitionSet transitionSetFaces = new TransitionSet();
+        transitionSetFaces.addTransition(new ChangeBounds());
+        transitionSetFaces.setInterpolator(new AccelerateInterpolator());
+        transitionSetFaces.setDuration(40 * 5);
+        final TransitionManager transitionManagerFaces = new TransitionManager();
+        transitionManagerFaces.setTransition(sceneButtonFacesVisible, sceneButtonFacesInvisible, transitionSetFaces);
+        transitionManagerFaces.setTransition(sceneButtonFacesInvisible, sceneButtonFacesVisible, transitionSetFaces);
+        transitionManagerFaces.transitionTo(sceneButtonFacesInvisible);
+
+        final Button buttonFaces = (Button) result.findViewById(R.id.buttonFaces);
+        mButtonClickListenerFaces = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFacesVisible) {
+                    transitionManagerFaces.transitionTo(sceneButtonFacesInvisible);
+                } else {
+                    transitionManagerFaces.transitionTo(sceneButtonFacesVisible);
+
+                    final ImageButton buttonFaceOk = (ImageButton) result.findViewById(R.id.buttonFaceOk);
+                    buttonFaceOk.setOnClickListener(mButtonClickListenerFaceOk);
+
+                    final ImageButton buttonFaceHappy = (ImageButton) result.findViewById(R.id.buttonFaceHappy);
+                    buttonFaceHappy.setOnClickListener(mButtonClickListenerFaceHappy);
+
+                    final ImageButton buttonFaceBlue = (ImageButton) result.findViewById(R.id.buttonFaceBlue);
+                    buttonFaceBlue.setOnClickListener(mButtonClickListenerFaceBlue);
+
+                    final ImageButton buttonFaceAngry = (ImageButton) result.findViewById(R.id.buttonFaceAngry);
+                    buttonFaceAngry.setOnClickListener(mButtonClickListenerFaceAngry);
+
+                    final ImageButton buttonFaceIll = (ImageButton) result.findViewById(R.id.buttonFaceIll);
+                    buttonFaceIll.setOnClickListener(mButtonClickListenerFaceIll);
+                }
+                mFacesVisible = !mFacesVisible;
+            }
+        };
+        buttonFaces.setOnClickListener(mButtonClickListenerFaces);
+        //endregion
+
+        //region LED buttons animation
         final ViewGroup ledsGroup = (ViewGroup) result.findViewById(R.id.scene_buttonLeds_container);
         final Scene sceneButtonLedsVisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_visible, context);
         final Scene sceneButtonLedsInvisible = Scene.getSceneForLayout(ledsGroup, R.layout.led_buttons_scene_invisible, context);
         final TransitionSet transitionSetLeds = new TransitionSet();
         transitionSetLeds.addTransition(new ChangeBounds());
         transitionSetLeds.setInterpolator(new AccelerateInterpolator());
-        transitionSetLeds.setDuration(150);
+        transitionSetLeds.setDuration(40 * 2);
         final TransitionManager transitionManagerLeds = new TransitionManager();
         transitionManagerLeds.setTransition(sceneButtonLedsVisible, sceneButtonLedsInvisible, transitionSetLeds);
         transitionManagerLeds.setTransition(sceneButtonLedsInvisible, sceneButtonLedsVisible, transitionSetLeds);
@@ -165,7 +252,7 @@ public class ControllerFragment extends Fragment {
             }
         };
         buttonLeds.setOnClickListener(mButtonClickListenerLeds);
-//--------------------------------------------------------------------------------------------------
+        //endregion
 
         mCheckBoxSendOrientation = (CheckBox) result.findViewById(R.id.checkboxSendOrientation);
         mCheckBoxSendOrientation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
