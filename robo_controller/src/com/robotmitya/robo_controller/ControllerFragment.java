@@ -122,7 +122,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "LED 1 press");
             mLedActive1 = !mLedActive1;
             updateLedButtons();
-            mControllerNode.switchLed1();
+            mControllerNode.setLed1(mLedActive1);
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
         }
@@ -133,7 +133,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "LED 2 press");
             mLedActive2 = !mLedActive2;
             updateLedButtons();
-            mControllerNode.switchLed2();
+            mControllerNode.setLed2(mLedActive2);
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
         }

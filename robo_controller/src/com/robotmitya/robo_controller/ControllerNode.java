@@ -51,15 +51,15 @@ public class ControllerNode implements NodeMain {
     public void onError(Node node, Throwable throwable) {
     }
 
-    void switchLed1() {
+    void setLed1(boolean turnOn) {
         std_msgs.String message = mArduinoInputPublisher.newMessage();
-        message.setData("L1 -1;");
+        message.setData(turnOn ? "L1 1;" : "L1;");
         mArduinoInputPublisher.publish(message);
     }
 
-    void switchLed2() {
+    void setLed2(boolean turnOn) {
         std_msgs.String message = mArduinoInputPublisher.newMessage();
-        message.setData("L2 -1;");
+        message.setData(turnOn ? "L2 1;" : "L2;");
         mArduinoInputPublisher.publish(message);
     }
 
