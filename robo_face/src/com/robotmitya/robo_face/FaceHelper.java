@@ -15,7 +15,7 @@ import static com.robotmitya.robo_common.Constants.TAG;
  * @author Дмитрий Дзахов
  *
  */
-enum FaceType { ftUnknown, ftOk, ftHappy, ftBlue, ftAngry, ftIll }
+enum FaceType { ftOk, ftHappy, ftBlue, ftAngry, ftIll }
 
 /**
  * Класс для управления лицом робота.

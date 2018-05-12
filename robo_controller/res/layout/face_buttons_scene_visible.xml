@@ -8,7 +8,7 @@
     <ImageButton
         android:id="@+id/buttonFaceOk"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="120dp"
@@ -20,7 +20,7 @@
     <ImageButton
         android:id="@+id/buttonFaceHappy"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="180dp"
@@ -32,7 +32,7 @@
     <ImageButton
         android:id="@+id/buttonFaceBlue"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="240dp"
@@ -44,7 +44,7 @@
     <ImageButton
         android:id="@+id/buttonFaceAngry"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="300dp"
@@ -56,7 +56,7 @@
     <ImageButton
         android:id="@+id/buttonFaceIll"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="360dp"

@@ -8,7 +8,7 @@
     <ImageButton
         android:id="@+id/buttonLed1"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="120dp"
@@ -20,7 +20,7 @@
     <ImageButton
         android:id="@+id/buttonLed2"
         style="?buttonBarButtonStyle"
-        android:background="@drawable/button_states"
+        android:background="@drawable/selectable_button_states"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="180dp"

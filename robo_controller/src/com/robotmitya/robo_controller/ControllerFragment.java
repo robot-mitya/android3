@@ -33,8 +33,9 @@ import static com.robotmitya.robo_common.Constants.TAG;
  *
  * Created by dmitrydzz on 06.05.18.
  */
+enum FaceType { ftOk, ftHappy, ftBlue, ftAngry, ftIll }
 
-public class ControllerFragment extends Fragment {
+public final class ControllerFragment extends Fragment {
     private SettingsFragment mSettingsFragment;
     private ControllerNode mControllerNode;
     private Orientation mOrientation;
@@ -46,12 +47,21 @@ public class ControllerFragment extends Fragment {
     private TextView mTextOutput;
 
     //region Face buttons' handlers
+    private ImageButton mButtonFaceOk;
+    private ImageButton mButtonFaceHappy;
+    private ImageButton mButtonFaceBlue;
+    private ImageButton mButtonFaceAngry;
+    private ImageButton mButtonFaceIll;
+
+    private FaceType mFaceType = FaceType.ftOk;
     private boolean mFacesVisible = false;
     private View.OnClickListener mButtonClickListenerFaces = null;
     private View.OnClickListener mButtonClickListenerFaceOk = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "FaceOk press");
+            mFaceType = FaceType.ftOk;
+            updateFaceButtons();
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -60,6 +70,8 @@ public class ControllerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "FaceHappy press");
+            mFaceType = FaceType.ftHappy;
+            updateFaceButtons();
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -68,6 +80,8 @@ public class ControllerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "FaceBlue press");
+            mFaceType = FaceType.ftBlue;
+            updateFaceButtons();
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -76,6 +90,8 @@ public class ControllerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "FaceAngry press");
+            mFaceType = FaceType.ftAngry;
+            updateFaceButtons();
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -84,6 +100,8 @@ public class ControllerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "FaceIll press");
+            mFaceType = FaceType.ftIll;
+            updateFaceButtons();
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -91,12 +109,19 @@ public class ControllerFragment extends Fragment {
     //endregion
 
     //region LED buttons' handlers
+    private ImageButton mButtonLed1;
+    private ImageButton mButtonLed2;
+
+    private boolean mLedActive1 = false;
+    private boolean mLedActive2 = false;
     private boolean mLedsVisible = false;
     private View.OnClickListener mButtonClickListenerLeds = null;
     private View.OnClickListener mButtonClickListenerLed1 = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "LED 1 press");
+            mLedActive1 = !mLedActive1;
+            updateLedButtons();
             mControllerNode.switchLed1();
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
@@ -106,6 +131,8 @@ public class ControllerFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.d(TAG, "LED 2 press");
+            mLedActive2 = !mLedActive2;
+            updateLedButtons();
             mControllerNode.switchLed2();
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
@@ -199,20 +226,22 @@ public class ControllerFragment extends Fragment {
                 } else {
                     transitionManagerFaces.transitionTo(sceneButtonFacesVisible);
 
-                    final ImageButton buttonFaceOk = (ImageButton) result.findViewById(R.id.buttonFaceOk);
-                    buttonFaceOk.setOnClickListener(mButtonClickListenerFaceOk);
+                    mButtonFaceOk = (ImageButton) result.findViewById(R.id.buttonFaceOk);
+                    mButtonFaceOk.setOnClickListener(mButtonClickListenerFaceOk);
 
-                    final ImageButton buttonFaceHappy = (ImageButton) result.findViewById(R.id.buttonFaceHappy);
-                    buttonFaceHappy.setOnClickListener(mButtonClickListenerFaceHappy);
+                    mButtonFaceHappy = (ImageButton) result.findViewById(R.id.buttonFaceHappy);
+                    mButtonFaceHappy.setOnClickListener(mButtonClickListenerFaceHappy);
 
-                    final ImageButton buttonFaceBlue = (ImageButton) result.findViewById(R.id.buttonFaceBlue);
-                    buttonFaceBlue.setOnClickListener(mButtonClickListenerFaceBlue);
+                    mButtonFaceBlue = (ImageButton) result.findViewById(R.id.buttonFaceBlue);
+                    mButtonFaceBlue.setOnClickListener(mButtonClickListenerFaceBlue);
 
-                    final ImageButton buttonFaceAngry = (ImageButton) result.findViewById(R.id.buttonFaceAngry);
-                    buttonFaceAngry.setOnClickListener(mButtonClickListenerFaceAngry);
+                    mButtonFaceAngry = (ImageButton) result.findViewById(R.id.buttonFaceAngry);
+                    mButtonFaceAngry.setOnClickListener(mButtonClickListenerFaceAngry);
 
-                    final ImageButton buttonFaceIll = (ImageButton) result.findViewById(R.id.buttonFaceIll);
-                    buttonFaceIll.setOnClickListener(mButtonClickListenerFaceIll);
+                    mButtonFaceIll = (ImageButton) result.findViewById(R.id.buttonFaceIll);
+                    mButtonFaceIll.setOnClickListener(mButtonClickListenerFaceIll);
+
+                    updateFaceButtons();
                 }
                 mFacesVisible = !mFacesVisible;
             }
@@ -242,11 +271,13 @@ public class ControllerFragment extends Fragment {
                 } else {
                     transitionManagerLeds.transitionTo(sceneButtonLedsVisible);
 
-                    final ImageButton buttonLed1 = (ImageButton) result.findViewById(R.id.buttonLed1);
-                    buttonLed1.setOnClickListener(mButtonClickListenerLed1);
+                    mButtonLed1 = (ImageButton) result.findViewById(R.id.buttonLed1);
+                    mButtonLed1.setOnClickListener(mButtonClickListenerLed1);
 
-                    final ImageButton buttonLed2 = (ImageButton) result.findViewById(R.id.buttonLed2);
-                    buttonLed2.setOnClickListener(mButtonClickListenerLed2);
+                    mButtonLed2 = (ImageButton) result.findViewById(R.id.buttonLed2);
+                    mButtonLed2.setOnClickListener(mButtonClickListenerLed2);
+
+                    updateLedButtons();
                 }
                 mLedsVisible = !mLedsVisible;
             }
@@ -342,5 +373,18 @@ public class ControllerFragment extends Fragment {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    private void updateFaceButtons() {
+        mButtonFaceOk.setSelected(mFaceType == FaceType.ftOk);
+        mButtonFaceHappy.setSelected(mFaceType == FaceType.ftHappy);
+        mButtonFaceBlue.setSelected(mFaceType == FaceType.ftBlue);
+        mButtonFaceAngry.setSelected(mFaceType == FaceType.ftAngry);
+        mButtonFaceIll.setSelected(mFaceType == FaceType.ftIll);
+    }
+
+    private void updateLedButtons() {
+        mButtonLed1.setSelected(mLedActive1);
+        mButtonLed2.setSelected(mLedActive2);
     }
 }

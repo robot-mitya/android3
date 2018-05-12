@@ -2,6 +2,11 @@
 <resources>
     <color name="board_background_color">#80333333</color>
 
+    <color name="button_enabled">#41ba7a</color>
+    <color name="button_pressed">#2f8959</color>
+    <color name="button_border_selected">#e7ff99</color>
+    <color name="button_border_pressed">#ffcb3b</color>
+
     <color name="velocity_joystick_disabled_background">#60BEBEBE</color>
     <color name="velocity_joystick_enabled_background">#60FFC107</color>
     <color name="velocity_joystick_zero_enabled_line">#FF5722</color>
