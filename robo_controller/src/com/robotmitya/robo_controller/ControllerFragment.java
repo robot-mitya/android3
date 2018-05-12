@@ -62,6 +62,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "FaceOk press");
             mFaceType = FaceType.ftOk;
             updateFaceButtons();
+            mControllerNode.sendFaceMessage(mFaceType);
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -72,6 +73,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "FaceHappy press");
             mFaceType = FaceType.ftHappy;
             updateFaceButtons();
+            mControllerNode.sendFaceMessage(mFaceType);
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -82,6 +84,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "FaceBlue press");
             mFaceType = FaceType.ftBlue;
             updateFaceButtons();
+            mControllerNode.sendFaceMessage(mFaceType);
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -92,6 +95,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "FaceAngry press");
             mFaceType = FaceType.ftAngry;
             updateFaceButtons();
+            mControllerNode.sendFaceMessage(mFaceType);
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -102,6 +106,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "FaceIll press");
             mFaceType = FaceType.ftIll;
             updateFaceButtons();
+            mControllerNode.sendFaceMessage(mFaceType);
             if (mButtonClickListenerFaces != null)
                 mButtonClickListenerFaces.onClick(v);
         }
@@ -122,7 +127,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "LED 1 press");
             mLedActive1 = !mLedActive1;
             updateLedButtons();
-            mControllerNode.setLed1(mLedActive1);
+            mControllerNode.sendLed1Message(mLedActive1);
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
         }
@@ -133,7 +138,7 @@ public final class ControllerFragment extends Fragment {
             Log.d(TAG, "LED 2 press");
             mLedActive2 = !mLedActive2;
             updateLedButtons();
-            mControllerNode.setLed2(mLedActive2);
+            mControllerNode.sendLed2Message(mLedActive2);
             if (mButtonClickListenerLeds != null)
                 mButtonClickListenerLeds.onClick(v);
         }

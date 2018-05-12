@@ -23,6 +23,7 @@ public class ControllerNode implements NodeMain {
     private Publisher<std_msgs.String> mHerkulexInputPublisher;
     private Publisher<sensor_msgs.Imu> mControllerImuPublisher;
     private Publisher<std_msgs.Int8> mDriveTowardsPublisher;
+    private Publisher<std_msgs.String> mFacePublisher;
 
     private int mImuSeq = 0;
 
@@ -37,6 +38,7 @@ public class ControllerNode implements NodeMain {
         mHerkulexInputPublisher = connectedNode.newPublisher(Constants.TopicName.HerkulexInput, "std_msgs/String");
         mControllerImuPublisher = connectedNode.newPublisher(Constants.TopicName.ControllerImu, "sensor_msgs/Imu");
         mDriveTowardsPublisher = connectedNode.newPublisher(Constants.TopicName.DriveTowards, "std_msgs/Int8");
+        mFacePublisher = connectedNode.newPublisher(Constants.TopicName.Face, "std_msgs/String");
     }
 
     @Override
@@ -51,13 +53,39 @@ public class ControllerNode implements NodeMain {
     public void onError(Node node, Throwable throwable) {
     }
 
-    void setLed1(boolean turnOn) {
+    void sendFaceMessage(FaceType faceType) {
+        std_msgs.String message = mFacePublisher.newMessage();
+        String messageText;
+        switch (faceType) {
+            case ftOk:
+                messageText = "ok";
+                break;
+            case ftHappy:
+                messageText = "happy";
+                break;
+            case ftBlue:
+                messageText = "blue";
+                break;
+            case ftAngry:
+                messageText = "angry";
+                break;
+            case ftIll:
+                messageText = "ill";
+                break;
+            default:
+                return;
+        }
+        message.setData(messageText);
+        mFacePublisher.publish(message);
+    }
+
+    void sendLed1Message(boolean turnOn) {
         std_msgs.String message = mArduinoInputPublisher.newMessage();
         message.setData(turnOn ? "L1 1;" : "L1;");
         mArduinoInputPublisher.publish(message);
     }
 
-    void setLed2(boolean turnOn) {
+    void sendLed2Message(boolean turnOn) {
         std_msgs.String message = mArduinoInputPublisher.newMessage();
         message.setData(turnOn ? "L2 1;" : "L2;");
         mArduinoInputPublisher.publish(message);
