@@ -13,7 +13,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="120dp"
         android:hint="@string/ui_switch_led_1"
-        android:src="@drawable/ic_settings"
+        android:src="@drawable/led1"
         android:visibility="visible"
         tools:ignore="ContentDescription" />
 
@@ -25,7 +25,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="180dp"
         android:hint="@string/ui_switch_led_2"
-        android:src="@drawable/ic_settings"
+        android:src="@drawable/led2"
         android:visibility="visible"
         tools:ignore="ContentDescription" />
 

@@ -71,9 +71,8 @@
 
     <CheckBox
         android:id="@+id/checkboxSendOrientation"
-        android:layout_below="@id/ledButtons"
         android:checked="false"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="140dp"
         android:layout_marginStart="20dp"
         android:text="@string/ui_send_orientation"
         android:layout_width="wrap_content"
