@@ -43,6 +43,12 @@ public class ControllerNode implements NodeMain {
 
     @Override
     public void onShutdown(Node node) {
+        setPointingMode(false);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

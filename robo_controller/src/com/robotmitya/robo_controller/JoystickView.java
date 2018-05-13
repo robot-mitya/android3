@@ -17,14 +17,19 @@ import static com.robotmitya.robo_common.Constants.TAG;
  */
 
 public class JoystickView extends RelativeLayout {
-    private static final float EPSILON = 0.2f;
-    private static final long PRESSED_STATE_DURATION = 125;
+    private static final float EPSILON = 0.1f;
+    private static final long PRESSED_STATE_DURATION = 500;
     private static final float CENTER_BUTTON_BORDER = 0.25f;
 
     private int mPointerId;
+
     private float mX;
     private float mY;
+    private float mPreviousSentX;
+    private float mPreviousSentY;
+
     private boolean mHandleDiagonals;
+    private boolean mIsAnalog = true;
 
     private boolean mIsCenterButtonDown;
     private long mCenterButtonDownMillis;
@@ -35,8 +40,8 @@ public class JoystickView extends RelativeLayout {
     private ImageView mImageViewDown;
     private ImageView mImageViewCenter;
 
-    public OnPositionedListener mOnPositionedListener;
-    public OnCenterButtonListener mOnCenterButtonListener;
+    private OnPositionedListener mOnPositionedListener;
+    private OnCenterButtonListener mOnCenterButtonListener;
 
     public JoystickView(Context context) {
         super(context);
@@ -68,9 +73,27 @@ public class JoystickView extends RelativeLayout {
         return mHandleDiagonals;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "SameParameterValue"})
     public void setHandleDiagonals(boolean value) {
         mHandleDiagonals = value;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean getIsAnalog() {
+        return mIsAnalog;
+    }
+
+    @SuppressWarnings({"unused", "SameParameterValue"})
+    public void setIsAnalog(boolean value) {
+        mIsAnalog = value;
+    }
+
+    public void setOnPositionedListener(OnPositionedListener listener) {
+        mOnPositionedListener = listener;
+    }
+
+    public void setOnCenterButtonListener(OnCenterButtonListener listener) {
+        mOnCenterButtonListener = listener;
     }
 
     private void init() {
@@ -122,6 +145,7 @@ public class JoystickView extends RelativeLayout {
             case MotionEvent.ACTION_MOVE:
                 if (pointerId == mPointerId) {
                     fillJoystickPosition(event);
+                    handleCenterButtonIdle();
                     handleNewJoystickPosition();
                 }
                 break;
@@ -142,13 +166,28 @@ public class JoystickView extends RelativeLayout {
                 else y = 0;
             }
         }
+
+        if (!mIsAnalog) {
+            if (x < -CENTER_BUTTON_BORDER) x = -1;
+            else if (x > CENTER_BUTTON_BORDER) x = 1;
+            else x = 0;
+            if (y < -CENTER_BUTTON_BORDER) y = -1;
+            else if (y > CENTER_BUTTON_BORDER) y = 1;
+            else y = 0;
+        }
+
         mImageViewLeft.setPressed(x < -EPSILON);
         mImageViewRight.setPressed(x > EPSILON);
         mImageViewUp.setPressed(y < -EPSILON);
         mImageViewDown.setPressed(y > EPSILON);
 
-        if (mOnPositionedListener != null)
-            mOnPositionedListener.OnPositioned(x, y);
+        if (x != mPreviousSentX || y != mPreviousSentY) {
+            if (mOnPositionedListener != null)
+                mOnPositionedListener.OnPositioned(x, y);
+
+            mPreviousSentX = x;
+            mPreviousSentY = y;
+        }
     }
 
     private void handleCenterButtonDown() {
@@ -168,6 +207,13 @@ public class JoystickView extends RelativeLayout {
         if (inCenterButtonBounds() && deltaTime <= PRESSED_STATE_DURATION) {
             if (mOnCenterButtonListener != null)
                 mOnCenterButtonListener.OnClick();
+        }
+    }
+
+    private void handleCenterButtonIdle() {
+        if (!inCenterButtonBounds()) {
+            mIsCenterButtonDown = false;
+            mImageViewCenter.setPressed(false);
         }
     }
 

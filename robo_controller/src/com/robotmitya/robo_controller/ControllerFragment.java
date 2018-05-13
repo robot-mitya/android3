@@ -40,9 +40,11 @@ public final class ControllerFragment extends Fragment {
     private ControllerNode mControllerNode;
     private Orientation mOrientation;
     private boolean mSendingOrientation = false;
+    private boolean mPointingMode = false;
 
     private RosImageView<CompressedImage> mVideoView;
     private CheckBox mCheckBoxSendOrientation;
+    private JoystickView mHeadJoystick;
     private VelocityJoystick mVelocityJoystick;
     private TextView mTextOutput;
 
@@ -296,7 +298,8 @@ public final class ControllerFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mControllerNode.setPointingMode(isChecked);
                 mSendingOrientation = isChecked;
-                mVelocityJoystick.setEnabled(isChecked);
+                mHeadJoystick.setEnabled(!isChecked);
+                //mVelocityJoystick.setEnabled(true);
                 if (isChecked) {
                     mOrientation.center();
                     mControllerNode.centerHead();
@@ -304,8 +307,27 @@ public final class ControllerFragment extends Fragment {
             }
         });
 
+        mHeadJoystick = (JoystickView) result.findViewById(R.id.headJoystick);
+        mHeadJoystick.setEnabled(true);
+        mHeadJoystick.setHandleDiagonals(false);
+        mHeadJoystick.setIsAnalog(false);
+        mHeadJoystick.setOnPositionedListener(new JoystickView.OnPositionedListener() {
+            @Override
+            public void OnPositioned(float x, float y) {
+                Log.d(TAG, String.format("x=%.2f, y=%.2f", x, y));
+            }
+        });
+        mHeadJoystick.setOnCenterButtonListener(new JoystickView.OnCenterButtonListener() {
+            @Override
+            public void OnClick() {
+                mPointingMode = !mPointingMode;
+                mControllerNode.setPointingMode(mPointingMode);
+                mControllerNode.centerHead();
+            }
+        });
+
         mVelocityJoystick = (VelocityJoystick) result.findViewById(R.id.velocityJoystick);
-        mVelocityJoystick.setEnabled(false);
+        mVelocityJoystick.setEnabled(true);
         mVelocityJoystick.setOnChangeVelocityListener(new VelocityJoystick.OnChangeVelocityListener() {
             @Override
             public void onChangeVelocity(byte velocity) {
