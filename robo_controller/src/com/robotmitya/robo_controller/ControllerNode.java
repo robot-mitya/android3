@@ -102,7 +102,7 @@ public class ControllerNode implements NodeMain {
         quaternion.setY(y);
         quaternion.setZ(z);
         quaternion.setW(w);
-        mControllerImuPublisher.publish(message);
+        //mControllerImuPublisher.publish(message);
     }
 
     void sendDriveTowards(byte velocity) {

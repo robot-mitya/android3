@@ -168,16 +168,16 @@ public class Orientation implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // Phone's axis direction: x - right, y - forward, z - up.
+        // Phone's axis direction: x - right, y - forward, z - up (?should check it!).
         // Mitya's axis direction: x - forward, y - left, z - up.
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
         {
-            // "Strange" params sequence equals to +90° rotation around z axis.
-            acc_.set(event.values[1], -event.values[0], event.values[2]);
+            // "Strange" params sequence:
+            acc_.set(event.values[2], event.values[1], event.values[0]);
             return;
         } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            // "Strange" params sequence equals to +90° rotation around z axis.
-            gyro_.set(event.values[1], -event.values[0], event.values[2]);
+            // "Strange" params sequence:
+            gyro_.set(event.values[2], event.values[1], event.values[0]);
         } else {
             return;
         }

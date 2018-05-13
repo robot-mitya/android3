@@ -7,8 +7,9 @@
     <color name="button_border_selected">#e7ff99</color>
     <color name="button_border_pressed">#ffcb3b</color>
 
-    <color name="velocity_joystick_disabled_background">#60BEBEBE</color>
-    <color name="velocity_joystick_enabled_background">#60FFC107</color>
+    <color name="joystick_disabled_background">#60BEBEBE</color>
+    <color name="joystick_enabled_background">#60FFC107</color>
+    <color name="joystick_pressed_background">#60a37b05</color>
     <color name="velocity_joystick_zero_enabled_line">#FF5722</color>
     <color name="velocity_joystick_zero_disabled_line">#757575</color>
     <color name="velocity_joystick_current_line">#8BC34A</color>

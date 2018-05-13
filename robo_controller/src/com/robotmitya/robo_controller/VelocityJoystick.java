@@ -83,8 +83,8 @@ public class VelocityJoystick extends View {
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         int colorId = enabled ?
-                R.color.velocity_joystick_enabled_background :
-                R.color.velocity_joystick_disabled_background;
+                R.color.joystick_enabled_background :
+                R.color.joystick_disabled_background;
         setBackgroundColor(getResources().getColor(colorId));
     }
 
